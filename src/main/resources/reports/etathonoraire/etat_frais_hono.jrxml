@@ -1,0 +1,1931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xmlns="http://jasperreports.sourceforge.net/jasperreports"
+			  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+			  name="etat_frais_hono" pageWidth="595" pageHeight="770" columnWidth="555" leftMargin="20" rightMargin="20"
+			  topMargin="20" bottomMargin="20" isSummaryNewPage="true" isSummaryWithPageHeaderAndFooter="true"
+			  uuid="1970068f-ecb4-4350-ba05-5d6cbf7777c5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Alternate row" mode="Opaque" backcolor="rgba(222, 243, 252, 0.75686276)"/>
+	<style name="Style1" mode="Opaque" backcolor="#DBDBDB"/>
+	<style name="CopyOf_Alternate row1" mode="Opaque" backcolor="#FFFFFF">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 ==0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#DEF3FC"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#DEF3FC"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="ds_cout" uuid="7b3aed3f-1c54-47cf-a2d5-2cd723f91a5a">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="currency" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT round(COALESCE(sum( CASE WHEN (d.is_forfait = 1) THEN d.forfait_ht ELSE (( (( (d.dh * 60) + d.dm ) / 60 ) * d.couthoraire )) END), 0), 2) cout
+from t_timesheet d
+         join t_dossiers doss on doss.id_doss = d.id_doss
+         join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+         join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+where d.id_doss = $P{dossierId}
+  and vu.vc_key = $P{vcKey}
+  and vu.id_user = $P{userId}
+UNION all
+SELECT round(COALESCE(sum(d.unit*d.price_per_unit), 0), 2) cout
+from t_debour d
+         join t_dossiers doss on doss.id_doss = d.id_doss
+         join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+         join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+where d.id_doss = $P{dossierId}
+  and vu.vc_key = $P{vcKey}
+  and vu.id_user = $P{userId}
+UNION all
+SELECT round(COALESCE(sum( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0), 2) cout
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_frais_procedure = 1
+  and compte.account_type_id = 1
+UNION all
+SELECT round(COALESCE(sum( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0),2) cout
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_frais_collaboration = 1
+  and compte.account_type_id = 1
+UNION all
+select round(sum(cout.cout), 2)
+from (
+         SELECT round(COALESCE(sum( CASE WHEN (d.is_forfait = 1) THEN d.forfait_ht ELSE (( (( (d.dh * 60) + d.dm ) / 60 ) * d.couthoraire )) END), 0), 2) cout
+         from t_timesheet d
+                  join t_dossiers doss on doss.id_doss = d.id_doss
+                  join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+                  join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+         where d.id_doss = $P{dossierId}
+           and vu.vc_key = $P{vcKey}
+           and vu.id_user = $P{userId}
+         UNION all
+         SELECT round(COALESCE(sum(d.unit*d.price_per_unit), 0), 2) cout
+         from t_debour d
+             join t_dossiers doss on doss.id_doss = d.id_doss
+             join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+             join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+         where d.id_doss = $P{dossierId}
+           and vu.vc_key = $P{vcKey}
+           and vu.id_user = $P{userId}
+         UNION all
+         SELECT round(COALESCE(sum( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0),2) cout
+         from t_frais d
+             join ref_poste poste on poste.id_poste = d.id_poste
+             join ref_compte compte on compte.id_compte = d.id_compte
+         where d.id_doss = $P{dossierId}
+           and d.vc_key = $P{vcKey}
+           and poste.is_frais_collaboration = 1
+           and compte.account_type_id = 1
+
+     ) cout
+UNION all
+SELECT round(COALESCE(sum( CASE WHEN (d.id_type > 1) THEN d.montantht ELSE (-d.montantht) END), 0), 2) cout
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_honoraires = 1
+  and compte.account_type_id = 1]]>
+		</queryString>
+		<field name="cout" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="cout"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_prestation_table" uuid="6da1ecdc-164e-4957-8fc1-a84efff7c3f9">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT d.date_action, tt.description,
+       (CASE WHEN (d.is_forfait = 0) THEN concat(LPAD(d.dh, 2, '0'),':', LPAD(d.dm, 2, '0')) ELSE 'NA' END) hour,
+           d.couthoraire couthoraire,
+       round(COALESCE(( CASE WHEN (d.is_forfait = 1) THEN d.forfait_ht ELSE (( (( (d.dh * 60) + d.dm ) / 60 ) * d.couthoraire )) END), 0), 2) cout
+from t_timesheet d
+         join t_timesheet_type tt on d.ts_type = tt.id_ts
+         join t_dossiers doss on doss.id_doss = d.id_doss
+         join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+         join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+where d.id_doss = $P{dossierId}
+  and vu.vc_key = $P{vcKey}
+  and vu.id_user = $P{userId}]]>
+		</queryString>
+		<field name="date_action" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.name" value="date_action"/>
+			<property name="com.jaspersoft.studio.field.label" value="date_action"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="description" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="description"/>
+			<property name="com.jaspersoft.studio.field.label" value="description"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet_type"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="hour" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="hour"/>
+			<property name="com.jaspersoft.studio.field.label" value="hour"/>
+		</field>
+		<field name="couthoraire" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.name" value="couthoraire"/>
+			<property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="cout" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="cout"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_fraisadmin_table" uuid="a3228f3e-6933-4c55-b5e5-6e800c4710a2">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT d.date_action,
+       tt.description Type,
+       concat(d.unit, '*',d.price_per_unit) Tarif,
+     round(COALESCE((d.unit*d.price_per_unit), 0), 2) cout
+from t_debour d
+         join t_debour_type tt on d.id_debour_type = tt.id_debour_type
+         join t_dossiers doss on doss.id_doss = d.id_doss
+         join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+         join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+         where d.id_doss = $P{dossierId}
+  and vu.vc_key = $P{vcKey}
+  and vu.id_user = $P{userId}]]>
+		</queryString>
+		<field name="date_action" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.name" value="date_action"/>
+			<property name="com.jaspersoft.studio.field.label" value="date_action"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_debour"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="Type" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="description"/>
+			<property name="com.jaspersoft.studio.field.label" value="Type"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_debour_type"/>
+		</field>
+		<field name="Tarif" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="Tarif"/>
+			<property name="com.jaspersoft.studio.field.label" value="Tarif"/>
+		</field>
+		<field name="cout" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="cout"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_debours_table" uuid="38915065-6a30-4472-8c63-9f7fa93488b6">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT d.date_value, poste.ref_poste,
+       round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0), 2) cout
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_frais_procedure = 1
+  and compte.account_type_id = 1]]>
+		</queryString>
+		<field name="date_value" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.name" value="date_value"/>
+			<property name="com.jaspersoft.studio.field.label" value="date_value"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_frais"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ref_poste" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="ref_poste"/>
+			<property name="com.jaspersoft.studio.field.label" value="ref_poste"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="ref_poste"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="cout" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="cout"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_collab_table" uuid="82331c40-2a73-4b7c-8844-475564d783e0">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT d.date_value, poste.ref_poste,
+       round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0), 2) cout
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_frais_collaboration = 1
+  and compte.account_type_id = 1]]>
+		</queryString>
+		<field name="date_value" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.name" value="date_value"/>
+			<property name="com.jaspersoft.studio.field.label" value="date_value"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_frais"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ref_poste" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="ref_poste"/>
+			<property name="com.jaspersoft.studio.field.label" value="ref_poste"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="ref_poste"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="cout" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="cout"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_honoraire_table" uuid="df63d3b9-32f2-4bad-a1d1-9806f0838e0b">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT d.date_value ,
+       round(COALESCE(( CASE WHEN (d.id_type > 1) THEN d.montantht ELSE (-d.montantht) END), 0), 2) cout
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_honoraires = 1
+  and compte.account_type_id = 1]]>
+		</queryString>
+		<field name="date_value" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.name" value="date_value"/>
+			<property name="com.jaspersoft.studio.field.label" value="date_value"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_frais"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="cout" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="cout"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_count_prestation" uuid="495b228f-8355-4b7a-b11c-c30e624e1417">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT SUM(round(COALESCE(( CASE WHEN (d.is_forfait = 1) THEN d.forfait_ht ELSE (( (( (d.dh * 60) + d.dm ) / 60 ) * d.couthoraire )) END), 0), 2)) cout_total
+from t_timesheet d
+         join t_timesheet_type tt on d.ts_type = tt.id_ts
+         join t_dossiers doss on doss.id_doss = d.id_doss
+         join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+         join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+where d.id_doss = $P{dossierId}
+  and vu.vc_key = $P{vcKey}
+  and vu.id_user = $P{userId}]]>
+		</queryString>
+		<field name="cout_total" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="cout_total"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout_total"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_count_fraisadmin" uuid="0c7da263-1d90-4fb7-baa7-018eb5c50f2d">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+ SUM(round(COALESCE((d.unit*d.price_per_unit), 0), 2)) cout_total
+from t_debour d
+         join t_debour_type tt on d.id_debour_type = tt.id_debour_type
+         join t_dossiers doss on doss.id_doss = d.id_doss
+         join t_dossier_rights doss_ri on doss.id_doss = doss_ri.DOSSIER_ID
+         join t_virtualcab_users vu on vu.ID = doss_ri.VC_USER_ID
+         where d.id_doss = $P{dossierId}
+  and vu.vc_key = $P{vcKey}
+  and vu.id_user = $P{userId}]]>
+		</queryString>
+		<field name="cout_total" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="cout_total"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout_total"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_count_debours" uuid="6e0e99f7-51bf-4228-8a8a-53df3c526ab7">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+SUM(round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0), 2)) cout_total
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_frais_procedure = 1
+  and compte.account_type_id = 1]]>
+		</queryString>
+		<field name="cout_total" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="cout_total"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout_total"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_count_collab" uuid="a9c6742d-bf8b-4551-8814-f60bcd09f08b">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+SUM(round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0), 2)) cout_total
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_frais_collaboration = 1
+  and compte.account_type_id = 1]]>
+		</queryString>
+		<field name="cout_total" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="cout_total"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout_total"/>
+		</field>
+	</subDataset>
+	<subDataset name="ds_count_honoraire" uuid="e77caecf-d831-4f80-a3e7-11b9a1327e47">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="vcKey" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+SUM(round(COALESCE(( CASE WHEN (d.id_type > 1) THEN d.montantht ELSE (-d.montantht) END), 0), 2)) cout_total
+from t_frais d
+         join ref_poste poste on poste.id_poste = d.id_poste
+         join ref_compte compte on compte.id_compte = d.id_compte
+where d.id_doss = $P{dossierId}
+  and d.vc_key = $P{vcKey}
+  and poste.is_honoraires = 1
+  and compte.account_type_id = 1]]>
+		</queryString>
+		<field name="cout_total" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="cout_total"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout_total"/>
+		</field>
+	</subDataset>
+	<parameter name="vcKey" class="java.lang.String">
+		<defaultValueExpression><![CDATA["AVOTEST"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="title" class="java.lang.String">
+		<defaultValueExpression><![CDATA["État de frais et honoraires"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dossierId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5531]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[96]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="concerne" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Concerne : "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ourRef" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Nos références : "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="honoraire" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Honoraires"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fraisLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Frais administratifs "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="prestLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Prestation"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="deboursLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Débours"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="collLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Frais de collaboration"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="provLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Sous total avant provisions"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="honorLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Provisions versées HTVA"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tvaLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["TVA sur"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tvacLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Total TVAC"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currency" class="java.lang.String">
+		<defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="details" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Détails"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="error" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Sauf erreur ou omission"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="total" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Total :"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
+	</queryString>
+	<field name="key" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="key"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="abbreviation" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="abbreviation"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="alias" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="alias"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="doc_path" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="doc_path"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="user_upd" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="user_upd"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="date_upd" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="date_upd"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="license_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="license_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="couthoraire" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="start_invoice_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="start_invoice_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="objetsocial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="objetsocial"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="street" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="street"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="city" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="city"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="cp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="id_country_alpha2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="id_country_alpha2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="telephone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="telephone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="fax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fax"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="website" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="website"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="numentreprise" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="numentreprise"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="logo" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="logo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="name_admin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name_admin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="email_admin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email_admin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="pass_admin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pass_admin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="temporary_vc" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="temporary_vc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="driveType" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="driveType"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="dropbox_token" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="dropbox_token"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="onedrive_token" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="onedrive_token"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="refresh_token" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="refresh_token"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="expire_token" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="expire_token"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="currency" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="currency"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="92">
+			<textField>
+				<reportElement x="157" y="60" width="243" height="30" uuid="60d978e9-d572-4ac0-8ee3-5c5ff1a9ccc5"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="-13" y="0" width="120" height="30" uuid="d02eadc2-c353-47e2-bd9e-4a10df30b781"/>
+				<imageExpression><![CDATA[$F{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="-8" y="34" width="100" height="20" uuid="72809547-fa30-4bb3-973e-05e09678bf55"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{key}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="336">
+			<subreport>
+				<reportElement x="50" y="6" width="400" height="325" uuid="53dbda07-f260-4d68-903a-4155266803a0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="dossierId">
+					<subreportParameterExpression><![CDATA[$P{dossierId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="vcKey">
+					<subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="userId">
+					<subreportParameterExpression><![CDATA[$P{userId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="concerne">
+					<subreportParameterExpression><![CDATA[$P{concerne}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ourRef">
+					<subreportParameterExpression><![CDATA[$P{ourRef}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "header.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="299">
+			<textField>
+				<reportElement x="20" y="36" width="220" height="30" uuid="e6346232-e9f1-4092-aed0-4daa14451fd5">
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5" spacingBefore="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{prestLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Alternate row" x="20" y="66" width="220" height="30" isRemoveLineWhenBlank="true"
+							   uuid="cddbf5c3-2138-46df-ad9f-1fd23079177d">
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5" spacingBefore="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fraisLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="96" width="220" height="30" uuid="5f4ec2fa-a0f0-4bd9-a68b-53947b69715b">
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5" spacingBefore="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{deboursLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Alternate row" x="20" y="126" width="220" height="30"
+							   uuid="7aaf9269-d65c-48ec-872b-974c1abdddcd">
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5" spacingBefore="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{collLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="156" width="220" height="30" uuid="7f93f48d-7ec5-4b0b-9b46-5164e35ba18f">
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5" spacingBefore="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{provLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Alternate row" x="20" y="186" width="220" height="30"
+							   uuid="68aad390-1db9-44d2-8133-4a716d4611dc">
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5" spacingBefore="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{honorLbl}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="240" y="36" width="300" height="30" uuid="777ae855-d1a5-4939-a940-d865510b9a23"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						 xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						 printOrder="Vertical">
+					<datasetRun subDataset="ds_cout" uuid="3cab0731-7fc9-44ec-89f7-88672d98e58c">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="currency">
+							<datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="30" width="300">
+						<textField>
+							<reportElement style="CopyOf_Alternate row1" x="0" y="0" width="280" height="30"
+										   uuid="7ffaa803-2909-4952-ac36-679781f3d7e1">
+								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+							</reportElement>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Right">
+								<font size="12"/>
+								<paragraph rightIndent="5" spacingBefore="5"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{cout} + " " + $P{currency}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<break>
+				<reportElement x="0" y="288" width="378" height="1" uuid="9b2c0dff-6471-498c-8332-c5a8e334120c"/>
+			</break>
+			<break>
+				<reportElement x="0" y="30" width="378" height="1" uuid="581954b8-95c2-449f-9d32-89e62271fc70"/>
+			</break>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="64" splitType="Stretch">
+			<textField>
+				<reportElement x="151" y="34" width="160" height="30" uuid="4109d13d-5ee1-4c03-943d-5f39ad7f5337">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="726" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="10" y="20" width="100" height="30" uuid="13f8d883-ef64-409d-84fa-1028aaad6112"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{details}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="0" y="80" width="550" height="100" uuid="558733ea-5008-415f-955c-e97fb688b9d6">
+					<property name="com.jaspersoft.studio.layout"
+							  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						  whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="ds_prestation_table" uuid="51b5d5f8-f3a1-432c-a09d-d1b04ab44f73">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="550" uuid="8b1b4945-1979-4d31-82fc-1e8e8672a517">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="550" height="30"
+											   uuid="16f2357a-3771-4025-a404-2708b56219b6">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								</reportElement>
+								<textElement>
+									<paragraph leftIndent="5" spacingBefore="5"/>
+								</textElement>
+								<text><![CDATA[Prestation]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnGroup width="550" uuid="ac7c1081-9ee4-4188-84a8-5fabc5112962">
+							<property name="com.jaspersoft.studio.components.table.model.column.name"
+									  value="Columns [2]"/>
+							<jr:column width="80" uuid="e73d5511-e75a-4580-a973-caf6970cce61">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column1"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="ae0edb53-3116-4406-94d2-fcec999fbce3">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Date]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField pattern="dd-MM-yyyy">
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="9367b4cc-b425-40dd-9df3-19138b72861c">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{date_action}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="230" uuid="3f9d82ad-c166-4a88-8d25-f45a775be1ad">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column0"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="c2ecab48-22cc-41aa-b19a-e17ba2bd159c">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Type	]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="410076eb-2fb4-40ff-9fc0-b7c1d199ede0">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="60" uuid="bc9866a4-0214-4404-bdc6-56181fc95398">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column0"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="60" height="30"
+													   uuid="c26ce150-af7c-437d-8663-3524aef6c1a2">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Temps]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="60" height="30"
+													   uuid="9b0a0c97-63c2-47c7-9f35-1065d408abae">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{hour}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="100" uuid="caac693d-21db-409e-a532-4cfa09439d84">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column0"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="100" height="30"
+													   uuid="386020d6-d871-4051-9e31-a75c1d0e177b">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Tarif]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="100" height="30"
+													   uuid="0f0bcd09-b4c1-4d7b-8399-c9153c109cc5">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{couthoraire}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="80" uuid="5e0f5d35-01ff-40d7-af80-75ec4ae2664f">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column2"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="26c59fd4-06b7-4253-a1fb-76bc0d71d74e">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[cout]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="cafd02a8-7a91-4b60-b4da-de8842614309">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{cout}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="0" y="210" width="550" height="100"
+							   uuid="5ff6a2f9-c80f-4588-90f7-ce164c22eb13">
+					<property name="com.jaspersoft.studio.layout"
+							  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						  whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="ds_fraisadmin_table" uuid="376c0a96-cbac-430e-8e5b-bbf5aad82756">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="490" uuid="7ba998d5-26ea-4311-a0c3-aab43e84742f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="490" height="30"
+											   uuid="bad4a365-30d5-43e1-8220-858df62808f6">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								</reportElement>
+								<textElement>
+									<paragraph leftIndent="5" spacingBefore="5"/>
+								</textElement>
+								<text><![CDATA[Frais administratif]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnGroup width="490" uuid="9705b969-1b82-4c1a-89e3-8031f5fe4035">
+							<property name="com.jaspersoft.studio.components.table.model.column.name"
+									  value="Columns [2]"/>
+							<jr:column width="80" uuid="f8ca7bc9-f150-4cbd-9aea-f69b7c1c4557">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column1"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="165497a0-a4a6-4121-9670-8c070a2c5bb5">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Date]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField pattern="dd-MM-yyyy">
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="69bb9e0f-92ef-4990-80c4-34d957c5724f">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{date_action}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="230" uuid="a24a15ce-1356-497b-b6f5-9de10533384f">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column0"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="e3a3059a-7119-4acf-97be-4045711b6ec5">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Type	]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="ba1fcc73-86be-48a8-8c56-d56951628cdd">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{Type}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="100" uuid="cd542182-d87b-48bf-a671-c1143f67a969">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column0"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="100" height="30"
+													   uuid="c01a68be-a2dd-49d6-bfa6-331ff50df69b">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Tarif]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="100" height="30"
+													   uuid="19f86a64-c9c1-4304-8e4e-d3ef367fb01c">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{Tarif}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="80" uuid="68ba5692-bea8-4adf-833e-e13c49f36fe0">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column2"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="1d8b5ccb-99c6-41a8-aa1e-c40a6ae85955">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[cout]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="a6ddc306-a7cd-45c3-aaec-7e37e0acb4b5">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{cout}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="0" y="332" width="550" height="100"
+							   uuid="a069a0d8-fcc9-44ac-a72d-9cfccf05aa91">
+					<property name="com.jaspersoft.studio.layout"
+							  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						  whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="ds_debours_table" uuid="a3cc861a-601c-4a07-be22-70967e6ebe62">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="490" uuid="abd72241-85d6-4752-a240-31bf73384111">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="490" height="30"
+											   uuid="75efc9c8-ebab-4c8e-8a90-130c92c8129e">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								</reportElement>
+								<textElement>
+									<paragraph leftIndent="5" spacingBefore="5"/>
+								</textElement>
+								<text><![CDATA[Débours]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnGroup width="490" uuid="8b9eb54a-4d8a-461d-b189-0447b14995aa">
+							<property name="com.jaspersoft.studio.components.table.model.column.name"
+									  value="Columns [2]"/>
+							<jr:column width="80" uuid="c6952605-63bf-4a02-a113-d1ecc1eb1160">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column1"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="da1836c1-744c-4c3d-af86-29693cd8d227">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Date]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField pattern="dd-MM-yyyy">
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="7d1c172c-7813-494f-ae2d-d8493d86cf44">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{date_value}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="230" uuid="a3918860-1d06-4e27-998b-7fd66a7c500c">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column0"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="89aba24e-8a1c-47f9-aa1d-322c84a42309">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Poste]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="fe9358b5-36f0-4ea2-be02-1ac580f910da">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{ref_poste}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="180" uuid="20662ed4-de15-43de-9a5b-c294aac6c726">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column2"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="180" height="30"
+													   uuid="4860a33d-1775-4ac0-8b4c-07c0d6f17a97">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[cout]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="180" height="30"
+													   uuid="f6575cd2-bb59-4fc4-8034-9680918b94c0">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{cout}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<break>
+				<reportElement x="0" y="438" width="376" height="1" uuid="1471127f-1fb2-4ae8-9d8b-4c416e66af7d"/>
+			</break>
+			<componentElement>
+				<reportElement positionType="Float" x="2" y="460" width="550" height="100"
+							   uuid="51b695bb-caf8-475e-8397-66d491293b7b">
+					<property name="com.jaspersoft.studio.layout"
+							  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						  whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="ds_collab_table" uuid="4e0f9334-c7f4-4641-8461-d9611ebc9353">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="490" uuid="01ddfb99-2a9e-4fa2-973a-7e46c074d254">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="490" height="30"
+											   uuid="1f33fafe-4b4f-470d-ad06-9bf1ce5a9905">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								</reportElement>
+								<textElement>
+									<paragraph leftIndent="5" spacingBefore="5"/>
+								</textElement>
+								<text><![CDATA[Frais de collaboration]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnGroup width="490" uuid="ff2018be-4776-446a-86fc-3c6defd3118e">
+							<property name="com.jaspersoft.studio.components.table.model.column.name"
+									  value="Columns [2]"/>
+							<jr:column width="80" uuid="72787631-66cd-489d-b23d-23bf81a09682">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column1"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="118f7162-a066-480b-a5cc-ccf699bb38eb">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Date]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField pattern="dd-MM-yyyy">
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="7d85b569-f9e8-4ec2-a609-2b08adefbd36">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{date_value}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="230" uuid="3e86f8a1-932c-4255-965f-57a3cb913f04">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column0"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="a4cb6922-d80d-4e30-9571-5024d89521aa">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Poste]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="230" height="30"
+													   uuid="5ac6fa08-8bce-48a9-bae0-f7c917042ca0">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{ref_poste}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="180" uuid="490da3bd-f654-4902-a530-d09bb5504ffa">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column2"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="180" height="30"
+													   uuid="7d9f21b9-b0f9-477e-852a-84255fe86448">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[cout]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="180" height="30"
+													   uuid="8d33b6b4-046f-4edd-9ae8-35d08a7bd36c">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{cout}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="0" y="585" width="550" height="100"
+							   uuid="4ffa4947-c776-40ac-ab64-0009057304ec">
+					<property name="com.jaspersoft.studio.layout"
+							  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						  whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="ds_honoraire_table" uuid="c7b185bd-bcd6-4030-b5c7-86053d45c39a">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="490" uuid="f5fc86bd-1d91-4ee0-a627-a69f0c7adc5d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="490" height="30"
+											   uuid="ee559daf-0ff2-4237-9192-018a0da99df4">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								</reportElement>
+								<textElement>
+									<paragraph leftIndent="5" spacingBefore="5"/>
+								</textElement>
+								<text><![CDATA[Provisions versées]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnGroup width="490" uuid="180f0f54-734f-4d36-a0fe-8f224aca4f73">
+							<property name="com.jaspersoft.studio.components.table.model.column.name"
+									  value="Columns [2]"/>
+							<jr:column width="80" uuid="4f0b0f2b-4b05-43ba-85f1-363f6afbcfc5">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column1"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="4e07d7db-53c2-402c-aeb6-5a4c150e370a">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[Date]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField pattern="dd-MM-yyyy">
+										<reportElement x="0" y="0" width="80" height="30"
+													   uuid="90485f20-fff3-4081-9a06-4a38fce5e24b">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+										</reportElement>
+										<textElement>
+											<paragraph leftIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{date_value}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="410" uuid="c5e9765c-8ede-4662-99e4-6a4db68bf17e">
+								<property name="com.jaspersoft.studio.components.table.model.column.name"
+										  value="Column2"/>
+								<jr:tableHeader style="Table_TH" height="0" rowSpan="1"/>
+								<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+									<staticText>
+										<reportElement x="0" y="0" width="410" height="30"
+													   uuid="94f16c8f-b622-431b-8816-9713cf49f20b">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<text><![CDATA[cout]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="30">
+									<textField>
+										<reportElement x="0" y="0" width="410" height="30"
+													   uuid="56f0c33a-52b2-4b1a-8db8-14cda15385d6">
+											<property name="com.jaspersoft.studio.unit.y" value="px"/>
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+											<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+											<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+										</reportElement>
+										<textElement textAlignment="Right">
+											<paragraph leftIndent="5" rightIndent="5" spacingBefore="5"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{cout}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement positionType="Float" x="0" y="689" width="310" height="30"
+							   uuid="34b2d5fa-7795-4215-b850-adcbe689db87"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{error}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="58" width="40" height="21" uuid="42f7e343-7247-4ec1-a876-c0372d2365f9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="38" y="58" width="130" height="21" uuid="5929f69f-5091-4adb-9503-7a3d7ca94366">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						 xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						 printOrder="Vertical">
+					<datasetRun subDataset="ds_count_prestation" uuid="328a8034-6461-4616-90e7-753494d38721">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="21" width="130">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="21"
+										   uuid="29186fe8-fd84-4a7b-9a21-4564ec2206c3">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<textFieldExpression>
+								<![CDATA[$F{cout_total} != null ? $F{cout_total} : "0.00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement positionType="Float" x="0" y="190" width="40" height="21"
+							   uuid="05aa6ef7-0a75-47a2-ba40-555123cf9f85">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="310" width="40" height="21"
+							   uuid="1b171f41-fe4b-4077-89e8-6ee7d3869f8d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="1" y="440" width="40" height="21"
+							   uuid="d16c91ba-5261-4db4-9973-6f01b3a0062d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="1" y="562" width="40" height="21"
+							   uuid="5b1188ec-f4cd-492c-b652-fe067af2df12">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement positionType="Float" x="39" y="189" width="130" height="21"
+							   uuid="c5d155b2-2658-45c7-a859-3d069af10d92">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						 xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						 printOrder="Vertical">
+					<datasetRun subDataset="ds_count_fraisadmin" uuid="044c1731-0884-447a-a437-2c9961252eaf">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="21" width="130">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="21"
+										   uuid="3b7caaa5-ee96-482c-b42d-0fa41f98ba12">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<textFieldExpression>
+								<![CDATA[$F{cout_total} != null ? $F{cout_total} : "0.00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="39" y="310" width="130" height="21"
+							   uuid="d0f00e90-c098-4348-b49e-38da2c1fee30">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						 xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						 printOrder="Vertical">
+					<datasetRun subDataset="ds_count_debours" uuid="bc0fcb11-4cec-46b6-a6e8-ef725d9f7b66">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="21" width="130">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="21"
+										   uuid="76ddbf13-04fb-40e6-8470-7d5c816fd6aa">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<textFieldExpression>
+								<![CDATA[$F{cout_total} != null ? $F{cout_total} : "0.00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="39" y="439" width="130" height="21"
+							   uuid="2d485c35-d2bd-43cb-befa-17da32bd932c">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						 xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						 printOrder="Vertical">
+					<datasetRun subDataset="ds_count_collab" uuid="59b34dee-f273-470a-b859-83007bca907f">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="21" width="130">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="21"
+										   uuid="1e87eb28-5321-4833-a7dc-3322150f9411">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<textFieldExpression>
+								<![CDATA[$F{cout_total} != null ? $F{cout_total} : "0.00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="40" y="562" width="130" height="21"
+							   uuid="081ac630-1892-476c-b1c4-6b0fed4e3dd0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+						 xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+						 printOrder="Vertical">
+					<datasetRun subDataset="ds_count_honoraire" uuid="c402f1c7-4e2a-4e7e-90f5-d429142b560f">
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="userId">
+							<datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="vcKey">
+							<datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="21" width="130">
+						<textField>
+							<reportElement x="0" y="0" width="100" height="21"
+										   uuid="5e9e21a7-7962-42f3-9fba-e8f020200d45">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<textFieldExpression>
+								<![CDATA[$F{cout_total} != null ? $F{cout_total} : "0.00"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

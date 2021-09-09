@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="total" pageWidth="300" pageHeight="150" columnWidth="260" leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20" uuid="c8e58188-afa8-4ef4-8f90-3e9d381aab82">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="vcKey" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userId" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currency" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numberLbl" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{numberLbl}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="costLbl" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{costLbl}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="timeLbl" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{timeLbl}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[$P{startDate}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{endDate}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+        count(ts.id_ts),
+       sum(round(   if(  ts.is_forfait = 0,   (( ts.dh * 60 +  ts.dm) / 60) *  ts.couthoraire  ,  ts.forfait_ht),2)) total,
+       sum(ts.dh) dh,
+       sum(ts.dm) dm
+from  t_timesheet  ts,t_timesheet_type a,
+      t_dossiers td, t_virtualcab_users vcu, t_dossier_rights dr,
+      t_dossiers_type tdt,t_users tu
+WHERE vcu.vc_key=$P{vcKey}
+  AND vcu.id_user= $P{userId}
+  AND dr.VC_USER_ID = vcu.id
+  AND dr.vc_owner in ( 1,2  )
+  AND td.id_doss = dr.DOSSIER_ID
+  and td.id_doss= ts.id_doss
+    and  ts.date_action between $P{startDate} and  $P{endDate}
+  and ts.ts_type=a.id_ts
+   and tdt.doss_type=td.doss_type
+  and ts.id_gest=tu.id]]>
+	</queryString>
+	<field name="count(ts.id_ts)" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="count(ts.id_ts)"/>
+		<property name="com.jaspersoft.studio.field.label" value="count(ts.id_ts)"/>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="total"/>
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+	</field>
+	<field name="dh" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="dh"/>
+		<property name="com.jaspersoft.studio.field.label" value="dh"/>
+	</field>
+	<field name="dm" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="dm"/>
+		<property name="com.jaspersoft.studio.field.label" value="dm"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<summary>
+		<band height="110" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="10" width="150" height="30" uuid="ab52d572-6fb7-4a29-9121-63330af1ad1f"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numberLbl} + $F{count(ts.id_ts)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="42" width="150" height="30" uuid="0c8067a3-c75b-4c6d-b587-a9c992487198"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{costLbl} + $F{total} +" "+$P{currency}]]></textFieldExpression>
+			</textField>
+            <textField>
+                <reportElement x="40" y="74" width="210" height="30" uuid="b469a1de-e5f5-4ad4-9d85-d0f9b2f7f786"/>
+                <textElement textAlignment="Right">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$P{timeLbl} +( ($F{dh} != null ? ($F{dh}).intValue() : 0 )+  ($F{dm} != null ? (($F{dm}).intValue()/60) : 0)) +":" + (  String.format("%02d", ($F{dm}).intValue()%60))]]></textFieldExpression>
+            </textField>
+		</band>
+	</summary>
+</jasperReport>

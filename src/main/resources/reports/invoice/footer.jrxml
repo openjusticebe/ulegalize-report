@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="footer" pageWidth="595" pageHeight="130" columnWidth="555" leftMargin="20" rightMargin="20"
+              topMargin="0" bottomMargin="5" uuid="73360704-c819-418a-a637-f7c6db9e9057">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="net.sf.jasperreports.export.pdf.write.bom" value="true"/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <parameter name="id_facture" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[$P{id_facture}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="vcKey" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+    </parameter>
+    <queryString language="SQL">
+        <![CDATA[select
+       REPLACE(
+       REPLACE(
+               REPLACE(
+                       REPLACE(template,
+                               '{_Facture_Reference}',
+                               (
+                                   SELECT facture_ref
+                                   FROM t_factures fd
+                                   WHERE id_facture = $P{id_facture}
+                               )),
+                   '{_Facture_MontantTotalTvac}', (
+                           SELECT montant
+                           FROM t_factures fd
+                           WHERE id_facture = $P{id_facture}
+                       )),
+               '{_Facture_Date}', (
+                   SELECT DATE_FORMAT(fd.date_value, '%d/%m/%Y') facture_date_value
+                   FROM t_factures fd
+                   WHERE id_facture = $P{id_facture}
+               )),
+               '{_Facture_DateEcheance}', (
+                   SELECT DATE_FORMAT(fd.date_echeance, '%d/%m/%Y') facture_date_echeance
+                   FROM t_factures fd
+                   WHERE id_facture = $P{id_facture}
+               ))
+           AS TEMPLATE
+from t_templates
+where vc_key = $P{vcKey}
+  AND type = 'S'
+  and context = 'FACTURE'
+  AND subcontext = CONCAT((SELECT tft.acronyme
+                           FROM t_factures t
+                                    inner join t_facture_type tft on t.id_facture_type = tft.id_facture_type
+                           WHERE t.id_facture = $P{id_facture}),'-', (SELECT t.id_echeance
+                                                        FROM t_factures t
+                                                        WHERE t.id_facture = $P{id_facture}), '-N')
+]]>
+    </queryString>
+    <field name="template" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="template"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_templates"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="100" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <textField>
+                <reportElement x="0" y="10" width="510" height="80" uuid="1f64a430-a02e-4bc9-993b-f7028bf7f95b">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+                <textElement textAlignment="Justified" markup="html">
+                    <font fontName="SansSerif" size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{template}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+</jasperReport>

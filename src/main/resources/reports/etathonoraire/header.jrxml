@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xmlns="http://jasperreports.sourceforge.net/jasperreports"
+			  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+			  name="header" pageWidth="595" pageHeight="470" columnWidth="555" leftMargin="20" rightMargin="20"
+			  topMargin="0" bottomMargin="0" uuid="72e96e15-5978-4b1e-a418-1b3f9b87e1b1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="dossierId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="vcKey" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="concerne" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{concerne}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ourRef" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{ourRef}]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select
+       t_countries.nom_fr_fr,
+       (t_clients3_bis.f_nom_party) f_nom_party,
+       IF(tusers.initiales='','??',tusers.initiales) as initiales,
+       a.f_nom,a.f_prenom,a.f_rue,a.f_num,a.f_cp,a.f_ville,a.f_tva,a.f_company,
+       t_title.title,
+       if(a.id_title='M','Cher,','Chère') as _Client_FormuleAppel,
+       if(a.client_type=1,a.f_nom,a.f_company) as f_nom_cab,
+       if(c.client_type=1,c.f_nom,c.f_company) as f_nom_adv,
+       b.*,concat(year_doss,'/',lpad(num_doss,4,'0')) ndo,
+       lpad(b.num_doss,4,'0') as _Dossier_Numero,
+       b.year_doss as _Dossier_Annee
+from t_dossiers b
+         inner join t_dossier_rights dr on b.id_doss = dr.DOSSIER_ID
+         inner join t_virtualcab_users vcu on dr.VC_USER_ID = vcu.id
+         left join t_dossier_contact t_dossier_contact on (t_dossier_contact.dossier_id = b.id_doss and t_dossier_contact.contact_type_id = 1)
+         left join t_clients a on a.id_client=t_dossier_contact.client_id
+         left join t_dossier_contact t_dossier_contact2 on (t_dossier_contact2.dossier_id = b.id_doss and t_dossier_contact2.contact_type_id = 2)
+         left join t_clients c on c.id_client=t_dossier_contact2.client_id
+         left join t_title on t_title.id_title=a.id_title
+         inner join t_users tusers on tusers.id = b.id_user_resp
+         left join t_countries on t_countries.alpha3=a.id_country_alpha3
+,(select t_dossier_contact3.dossier_id, group_concat(t_clients3.f_nom) f_nom_party from  t_dossier_contact t_dossier_contact3
+                                left join t_clients t_clients3 on t_clients3.id_client=t_dossier_contact3.client_id
+  where (t_dossier_contact3.dossier_id = $P{dossierId} and t_dossier_contact3.contact_type_id = 3)
+    group by t_dossier_contact3.dossier_id
+) t_clients3_bis
+     WHERE b.id_doss= $P{dossierId}
+     AND vcu.vc_key=$P{vcKey}
+     AND vcu.id_user=$P{userId}]]>
+	</queryString>
+	<field name="nom_fr_fr" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nom_fr_fr"/>
+		<property name="com.jaspersoft.studio.field.label" value="nom_fr_fr"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_countries"/>
+	</field>
+	<field name="f_nom_party" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_nom_party"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_nom_party"/>
+	</field>
+	<field name="initiales" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="initiales"/>
+		<property name="com.jaspersoft.studio.field.label" value="initiales"/>
+	</field>
+	<field name="f_nom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_nom"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_nom"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="f_prenom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_prenom"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_prenom"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="f_rue" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_rue"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_rue"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="f_num" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_num"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="f_cp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_cp"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_cp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="f_ville" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_ville"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_ville"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="f_tva" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_tva"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_tva"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="f_company" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_company"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_company"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+	</field>
+	<field name="title" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="title"/>
+		<property name="com.jaspersoft.studio.field.label" value="title"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_title"/>
+	</field>
+	<field name="_Client_FormuleAppel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="_Client_FormuleAppel"/>
+		<property name="com.jaspersoft.studio.field.label" value="_Client_FormuleAppel"/>
+	</field>
+	<field name="f_nom_cab" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_nom_cab"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_nom_cab"/>
+	</field>
+	<field name="f_nom_adv" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="f_nom_adv"/>
+		<property name="com.jaspersoft.studio.field.label" value="f_nom_adv"/>
+	</field>
+	<field name="id_doss" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id_doss"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_doss"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="vc_key" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vc_key"/>
+		<property name="com.jaspersoft.studio.field.label" value="vc_key"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="year_doss" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="year_doss"/>
+		<property name="com.jaspersoft.studio.field.label" value="year_doss"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="num_doss" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="num_doss"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_doss"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="doss_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="doss_type"/>
+		<property name="com.jaspersoft.studio.field.label" value="doss_type"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="client_cab" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="client_cab"/>
+		<property name="com.jaspersoft.studio.field.label" value="client_cab"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="client_adv" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="client_adv"/>
+		<property name="com.jaspersoft.studio.field.label" value="client_adv"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="date_open" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="date_open"/>
+		<property name="com.jaspersoft.studio.field.label" value="date_open"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="date_close" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="date_close"/>
+		<property name="com.jaspersoft.studio.field.label" value="date_close"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="id_matiere_rubrique" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_matiere_rubrique"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_matiere_rubrique"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="keywords" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="keywords"/>
+		<property name="com.jaspersoft.studio.field.label" value="keywords"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="note" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="note"/>
+		<property name="com.jaspersoft.studio.field.label" value="note"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="memo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="memo"/>
+		<property name="com.jaspersoft.studio.field.label" value="memo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="success_fee_perc" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="success_fee_perc"/>
+		<property name="com.jaspersoft.studio.field.label" value="success_fee_perc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="success_fee_montant" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="success_fee_montant"/>
+		<property name="com.jaspersoft.studio.field.label" value="success_fee_montant"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="user_upd" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="user_upd"/>
+		<property name="com.jaspersoft.studio.field.label" value="user_upd"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="date_upd" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="date_upd"/>
+		<property name="com.jaspersoft.studio.field.label" value="date_upd"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="couthoraire" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="couthoraire"/>
+		<property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="id_user_resp" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id_user_resp"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_user_resp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="opposing_counsel" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="opposing_counsel"/>
+		<property name="com.jaspersoft.studio.field.label" value="opposing_counsel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="client_quality" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="client_quality"/>
+		<property name="com.jaspersoft.studio.field.label" value="client_quality"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="is_digital" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="is_digital"/>
+		<property name="com.jaspersoft.studio.field.label" value="is_digital"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<field name="ndo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ndo"/>
+		<property name="com.jaspersoft.studio.field.label" value="ndo"/>
+	</field>
+	<field name="_Dossier_Numero" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="_Dossier_Numero"/>
+		<property name="com.jaspersoft.studio.field.label" value="_Dossier_Numero"/>
+	</field>
+	<field name="_Dossier_Annee" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="year_doss"/>
+		<property name="com.jaspersoft.studio.field.label" value="_Dossier_Annee"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="325" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="530" height="310" uuid="95e5e20f-0ace-42e6-95f8-b6d6caf2b07d"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField>
+					<reportElement x="272" y="2" width="200" height="30" uuid="3f5842a5-93a0-489a-9808-7e61c2880102"/>
+					<textFieldExpression>
+						<![CDATA[$F{f_company}  != null && $F{f_company}  != "" ? $F{f_company}  : ""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="272" y="32" width="248" height="21" uuid="492de3c7-39d7-44b1-93a0-7333008f8a70">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression>
+						<![CDATA[$F{doss_type}.equals("MD") ? $F{f_nom_party} : $F{title} + " " + $F{f_prenom} + " " + $F{f_nom}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="272" y="51" width="200" height="21" uuid="0b889202-de93-4af7-a754-2cc799d61c18"/>
+					<textFieldExpression>
+						<![CDATA[!$F{doss_type}.equals("MD") ? $F{f_rue} + " " + $F{f_num} : ""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="272" y="73" width="200" height="21" uuid="ef9536cb-25fb-4e15-9978-75d2abb60975">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression>
+						<![CDATA[!$F{doss_type}.equals("MD") ? $F{f_cp} + " " + $F{f_ville} : ""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="272" y="93" width="200" height="21" uuid="4e5c75f3-5387-49ea-8bf0-42b3d014246f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression>
+						<![CDATA[!$F{doss_type}.equals("MD") ? $F{nom_fr_fr} : ""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="310" y="114" width="162" height="30" uuid="ca1df6fa-b930-40e1-bfa6-10c35746c66d"/>
+					<textFieldExpression>
+						<![CDATA[$F{f_tva} != null && $F{f_tva} != "" ? $F{f_tva}  : ""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="272" y="144" width="200" height="30" uuid="9b83ede7-d77e-48fc-b7ec-0989a6d90109"/>
+					<textFieldExpression>
+						<![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField>
+				<reportElement x="0" y="220" width="300" height="30" uuid="94c0a236-3a2d-43e7-9c94-20a201e0d839"/>
+				<textFieldExpression>
+					<![CDATA[$P{concerne} +  " " + (!$F{doss_type}.equals("MD") ? $F{f_nom_cab} + " / " + $F{f_nom_adv} : $F{f_nom_party})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="250" width="300" height="30" uuid="94c04880-aaec-42f2-85f1-5fa70c3d2245"/>
+				<textFieldExpression>
+					<![CDATA[$P{ourRef} + $F{_Dossier_Annee} + " / " + $F{_Dossier_Numero} + " / " + $F{initiales}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

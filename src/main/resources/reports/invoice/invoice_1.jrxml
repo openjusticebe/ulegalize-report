@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="invoice_1" pageWidth="595" pageHeight="760" columnWidth="555" leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20" uuid="7d93021c-f88f-4e80-9aac-5ec6e6016af0">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+        <conditionalStyle>
+            <conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+            <style backcolor="#FBFDFF"/>
+        </conditionalStyle>
+    </style>
+    <subDataset name="virtualcab_dataset" uuid="60b3715b-92d0-4932-9f9f-46cc32c40bdf">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+        <parameter name="vcKey" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+        </parameter>
+        <queryString language="SQL">
+            <![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
+        </queryString>
+        <field name="key" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="key"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="email" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="email"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="name" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="name"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="abbreviation" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="abbreviation"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="alias" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="alias"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="doc_path" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="doc_path"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="user_upd" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="user_upd"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="date_upd" class="java.sql.Timestamp">
+            <property name="com.jaspersoft.studio.field.label" value="date_upd"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="license_id" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="license_id"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="couthoraire" class="java.lang.Integer">
+            <property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="start_invoice_number" class="java.lang.Integer">
+            <property name="com.jaspersoft.studio.field.label" value="start_invoice_number"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="objetsocial" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="objetsocial"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="street" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="street"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="city" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="city"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="cp" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="cp"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="id_country_alpha2" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="id_country_alpha2"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="telephone" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="telephone"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="fax" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="fax"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="website" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="website"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="numentreprise" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="numentreprise"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="logo" class="java.lang.Object">
+            <property name="com.jaspersoft.studio.field.label" value="logo"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="name_admin" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="name_admin"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="email_admin" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="email_admin"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="pass_admin" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="pass_admin"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="driveType" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="driveType"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="dropbox_token" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="dropbox_token"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="onedrive_token" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="onedrive_token"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="refresh_token" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="refresh_token"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="expire_token" class="java.sql.Timestamp">
+            <property name="com.jaspersoft.studio.field.label" value="expire_token"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+        <field name="currency" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="currency"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+        </field>
+    </subDataset>
+    <subDataset name="facture_detatils_dataset" uuid="0e38c664-ab3a-4ca4-b8f6-0309f081a89c">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+        <parameter name="currency" class="java.lang.String">
+            <parameterDescription><![CDATA[€]]></parameterDescription>
+        </parameter>
+        <parameter name="id_facture" class="java.lang.Integer">
+            <defaultValueExpression><![CDATA[$P{id_facture}]]></defaultValueExpression>
+        </parameter>
+        <queryString language="SQL">
+            <![CDATA[SELECT *
+FROM t_facture_details
+WHERE 
+	 t_facture_details.id_facture = $P{id_facture}]]>
+        </queryString>
+        <field name="id" class="java.lang.Integer">
+            <property name="com.jaspersoft.studio.field.label" value="id"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="id_facture" class="java.lang.Integer">
+            <property name="com.jaspersoft.studio.field.label" value="id_facture"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="description" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="description"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="htva" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="htva"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="tva" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="tva"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="ttc" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="ttc"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="user_upd" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="user_upd"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="date_upd" class="java.sql.Timestamp">
+            <property name="com.jaspersoft.studio.field.label" value="date_upd"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+    </subDataset>
+    <subDataset name="prestation_ds" uuid="8bac487c-d6e5-4e31-b547-e9c01d065ac4">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+        <parameter name="id_facture" class="java.lang.Integer">
+            <defaultValueExpression><![CDATA[$P{id_facture}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="currency" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
+        </parameter>
+        <queryString language="SQL">
+            <![CDATA[select sheet.vat tva, tt.description,
+sheet.date_action,
+	round(  if( sheet.is_forfait = 0, ((sheet.dh * 60+sheet.dm) / 60) * sheet.couthoraire , sheet.forfait_ht),2) cout_htva ,
+	round(  if( sheet.is_forfait = 0, (((sheet.dh * 60+sheet.dm) / 60) * sheet.couthoraire ) * (1+sheet.vat/100) , sheet.forfait_ht * (1+sheet.vat/100)) ,2 ) cout
+	from t_timesheet sheet
+	INNER JOIN t_facture_timesheet ft ON ft.TS_ID = sheet.id_ts
+    inner join t_timesheet_type tt on tt.id_ts = sheet.ts_type
+    where  ft.FACTURE_ID = $P{id_facture}]]>
+        </queryString>
+        <field name="description" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="description"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet_type"/>
+        </field>
+        <field name="date_action" class="java.sql.Date">
+            <property name="com.jaspersoft.studio.field.label" value="date_action"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+        </field>
+        <field name="cout_htva" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.label" value="cout_htva"/>
+        </field>
+        <field name="tva" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="tva"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+        </field>
+        <field name="cout" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.label" value="cout"/>
+        </field>
+    </subDataset>
+    <parameter name="currency" class="java.lang.String">
+        <defaultValueExpression><![CDATA["$"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_tva" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Montant TVA"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_htva" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Montant HTVA"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_total" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Le montant total à payer"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_details" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Détails"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_prestation" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Prestation"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_resume" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Résumé"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="validate" class="java.lang.String">
+        <defaultValueExpression><![CDATA["À VALIDER"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="id_facture" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[2728]]></defaultValueExpression>
+    </parameter>
+    <parameter name="SUBREPORT_DIR" class="java.lang.String">
+        <defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="vcKey" class="java.lang.String">
+        <defaultValueExpression><![CDATA["AVOTEST"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_invoice_done" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Facture acquittée le "]]></defaultValueExpression>
+    </parameter>
+    <queryString language="SQL">
+        <![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
+    </queryString>
+    <field name="key" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="key"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="email" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="email"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="name" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="name"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="abbreviation" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="abbreviation"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="alias" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="alias"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="doc_path" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="doc_path"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="user_upd" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="user_upd"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="date_upd" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.label" value="date_upd"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="license_id" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="license_id"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="couthoraire" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="start_invoice_number" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.label" value="start_invoice_number"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="objetsocial" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="objetsocial"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="street" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="street"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="city" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="city"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="cp" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="cp"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="id_country_alpha2" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="id_country_alpha2"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="telephone" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="telephone"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="fax" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="fax"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="website" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="website"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="numentreprise" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="numentreprise"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="logo" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="logo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="name_admin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name_admin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="email_admin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email_admin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="pass_admin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pass_admin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="driveType" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="driveType"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+    <field name="dropbox_token" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="dropbox_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="onedrive_token" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="onedrive_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="refresh_token" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="refresh_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="expire_token" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.label" value="expire_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="currency" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="currency"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <background>
+        <band height="40" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <subreport>
+                <reportElement x="91" y="5" width="329" height="35" uuid="f29b474f-8338-4b26-a8cc-7b9f664e6f21">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
+                <subreportParameter name="id_facture">
+                    <subreportParameterExpression><![CDATA[$P{id_facture}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="validate">
+                    <subreportParameterExpression><![CDATA[$P{validate}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR}  +"validate.jasper"]]></subreportExpression>
+            </subreport>
+        </band>
+    </background>
+    <title>
+        <band height="559" splitType="Stretch">
+            <property name="com.jaspersoft.studio.layout"/>
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <textField>
+                <reportElement x="-3" y="162" width="230" height="20" uuid="760fdd50-1805-434d-84c8-0969a0d046d2"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{website}]]></textFieldExpression>
+            </textField>
+            <image>
+                <reportElement x="-3" y="0" width="120" height="30" uuid="6a3e79fd-109d-4b58-92ab-aab2c136a489"/>
+                <imageExpression><![CDATA[$F{logo}]]></imageExpression>
+            </image>
+            <textField>
+                <reportElement x="-3" y="42" width="230" height="20" uuid="dc6c08b0-3282-49db-b1db-ba3dc4c33d3e"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="-3" y="62" width="230" height="20" uuid="b86bc061-363f-46b5-a00b-4be14d16f375"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{street}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="-3" y="82" width="60" height="20" uuid="7e0198e8-a2e5-4b88-b0c2-eddd1c8515bd"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{cp}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="57" y="82" width="170" height="20" uuid="3f70e031-9900-4189-94c9-0b4bb2c4e23e"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="-3" y="102" width="230" height="20" uuid="45d9aa0d-a0a1-499e-affd-6aa696e40fa0"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{telephone}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="-3" y="122" width="230" height="20" uuid="288605dd-5cbb-415a-b51d-ddba07594974"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="-3" y="143" width="230" height="20" uuid="38f5a573-7144-42b6-91e7-62259d1abf3f"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{numentreprise}]]></textFieldExpression>
+            </textField>
+            <subreport overflowType="Stretch">
+                <reportElement x="240" y="0" width="310" height="215" uuid="5e743fd7-a9cb-42d4-970a-7ebdda06b7da">
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <subreportParameter name="factureId">
+                    <subreportParameterExpression><![CDATA[$P{id_facture}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="vcKey">
+                    <subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "header.jasper"]]></subreportExpression>
+            </subreport>
+            <subreport>
+                <reportElement x="7" y="223" width="510" height="320" uuid="050317d1-0d7c-471f-ba4b-a53fbb927156">
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <subreportParameter name="label_total">
+                    <subreportParameterExpression><![CDATA[$P{label_total}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="currency">
+                    <subreportParameterExpression><![CDATA[$P{currency}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="id_facture">
+                    <subreportParameterExpression><![CDATA[$P{id_facture}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_resume">
+                    <subreportParameterExpression><![CDATA[$P{label_resume}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_htva">
+                    <subreportParameterExpression><![CDATA[$P{label_htva}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="SUBREPORT_DIR">
+                    <subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_tva">
+                    <subreportParameterExpression><![CDATA[$P{label_tva}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="vcKey">
+                    <subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_invoice_done">
+                    <subreportParameterExpression><![CDATA[$P{label_invoice_done}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} +"resume.jasper"]]></subreportExpression>
+            </subreport>
+        </band>
+    </title>
+    <detail>
+        <band height="193" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <frame>
+                <reportElement x="0" y="20" width="558" height="120" isRemoveLineWhenBlank="true"
+                               uuid="a21d9046-a171-4dcd-a821-646556789e65">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <componentElement>
+                    <reportElement x="0" y="50" width="558" height="80" uuid="baa4a6c7-ddf5-4e5f-93dc-6d4132d2e521">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                        <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+                        <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+                        <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+                        <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    </reportElement>
+                    <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                        <datasetRun subDataset="prestation_ds" uuid="9129bb06-2a21-492b-a2f1-6d631c8de2ab">
+                            <datasetParameter name="id_facture">
+                                <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="currency">
+                                <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                        </datasetRun>
+                        <jr:column width="220" uuid="456e01e4-0f49-4df3-86de-a3cf79c01dcb">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="220" height="30"
+                                                   uuid="41e63902-ad13-455a-af27-95fbff68b3cb"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Type]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="220" height="30"
+                                                   uuid="79252ca5-9f37-4596-a30d-3732a7cbef29"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="98" uuid="48586746-643d-427d-a52a-c0273cb6c8ea">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="98" height="30"
+                                                   uuid="f8fca96e-fb13-4cab-a17f-1c2e7c79835b"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Date]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField pattern="yyyy-MM-dd">
+                                    <reportElement x="0" y="0" width="98" height="30"
+                                                   uuid="cebc272d-d751-45f6-87f9-3459124940aa"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{date_action}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="83" uuid="ac855224-a1cb-4136-969d-fa02f6f0f440">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="83" height="30"
+                                                   uuid="1852dcb9-2d99-4f6e-a99a-9b16e54b8809"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[HTVA]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="83" height="30"
+                                                   uuid="cf76d05e-96a7-4e0c-b546-93da064f4c45"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression>
+                                        <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout_htva})+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="74" uuid="ba8b75ce-4158-4801-8e65-d946cdef59b0">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="74" height="30"
+                                                   uuid="1ac04ee2-39d7-436c-a8ef-6c06c1a02455"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[ttc]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="74" height="30"
+                                                   uuid="609f62c0-587a-4fd8-8245-c0dc455599b2"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{tva} +"%"]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="83" uuid="1a34010c-c5e3-4d04-8a6e-ec83976f357a">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="83" height="30"
+                                                   uuid="15cfd471-8a94-4dd2-8373-efbdce096043"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[TVAC]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="83" height="30"
+                                                   uuid="1b078ed1-5105-4e4e-90dc-1aff51f82761"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression>
+                                        <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout})+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                    </jr:table>
+                </componentElement>
+                <textField>
+                    <reportElement x="3" y="0" width="157" height="30" uuid="b54e3a89-9fbc-4730-9135-a097f3e4ea25">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                    <textElement>
+                        <font size="14" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{label_prestation}]]></textFieldExpression>
+                </textField>
+            </frame>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="148" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <property name="com.jaspersoft.studio.layout"/>
+            <subreport overflowType="Stretch">
+                <reportElement x="8" y="7" width="538" height="130" uuid="d99454f3-a27c-45cd-a5e1-37f3e6430f55">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <subreportParameter name="vcKey">
+                    <subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="id_facture">
+                    <subreportParameterExpression><![CDATA[$P{id_facture}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} +"footer.jasper"]]></subreportExpression>
+            </subreport>
+            <textField>
+                <reportElement x="180" y="116" width="150" height="30" uuid="ea6f889c-794c-404f-b2b9-2c343e65abc0"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

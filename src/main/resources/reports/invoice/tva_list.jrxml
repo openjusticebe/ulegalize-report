@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="tva_list" pageWidth="559" pageHeight="842" columnWidth="519" leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20" uuid="c46272ea-8edc-4f9a-b970-7f713665d17b">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <subDataset name="tva_list" uuid="8412acbc-833d-490c-83ce-83c6019008c2">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+        <parameter name="label_tva" class="java.lang.String">
+            <defaultValueExpression><![CDATA["Montant TVA"]]></defaultValueExpression>
+        </parameter>
+        <parameter name="currency" class="java.lang.String">
+            <defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+        </parameter>
+        <parameter name="factureId" class="java.lang.Integer">
+            <defaultValueExpression><![CDATA[$P{factureId}]]></defaultValueExpression>
+        </parameter>
+        <queryString language="SQL">
+            <![CDATA[select fd.tva, (sum(fd.ttc) ) - ( sum(fd.htva) ) as groupTVA
+from t_facture_details fd
+where fd.id_facture=$P{factureId}
+and fd.tva>0
+group by tva
+union all
+select facture_timesheet.tva, round( IFNULL(round(facture_timesheet.ttc, 2), 0)  -  IFNULL( round(facture_timesheet.htva, 2), 0), 2) as groupTVA
+from t_factures facture
+inner join t_factures tf on facture.id_facture = tf.id_facture
+    LEFT JOIN
+    (
+    select sheet.vat tva,
+    sum(round( if( sheet.is_forfait = 0, ((sheet.dh * 60+sheet.dm) / 60) * sheet.couthoraire , sheet.forfait_ht) ,2) )htva,
+    sum(round( if( sheet.is_forfait = 0, (((sheet.dh * 60+sheet.dm) / 60) * sheet.couthoraire ) * (1+sheet.vat/100) , sheet.forfait_ht) ,2 )) ttc,
+    FACTURE_ID
+    from t_facture_timesheet ft, avogest.t_timesheet sheet
+    where ft.FACTURE_ID =$P{factureId}
+    and sheet.id_ts = ft.TS_ID
+    group by sheet.vat
+    ) facture_timesheet
+    ON  tf.id_facture = facture_timesheet.FACTURE_ID
+where facture.id_facture=$P{factureId}
+  and facture_timesheet.tva>0
+group by facture_timesheet.tva]]>
+        </queryString>
+        <field name="tva" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="tva"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_details"/>
+        </field>
+        <field name="groupTVA" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.label" value="groupTVA"/>
+        </field>
+    </subDataset>
+    <parameter name="label_tva" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Montant TVA"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="currency" class="java.lang.String">
+        <defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="factureId" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[$P{factureId}]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <background>
+        <band height="140" splitType="Stretch">
+            <componentElement>
+                <reportElement x="-20" y="0" width="557" height="70" uuid="362e5e4b-5d2e-4393-bde3-592636d24aed">
+                    <property name="com.jaspersoft.studio.unit.CONTENTS.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                         xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+                         printOrder="Vertical">
+                    <datasetRun subDataset="tva_list" uuid="375ff513-2562-4d6a-b003-9c7bef63c443">
+                        <datasetParameter name="label_tva">
+                            <datasetParameterExpression><![CDATA[$P{label_tva}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="currency">
+                            <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="factureId">
+                            <datasetParameterExpression><![CDATA[$P{factureId}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                    </datasetRun>
+                    <jr:listContents height="70" width="557">
+                        <textField>
+                            <reportElement x="0" y="0" width="130" height="20"
+                                           uuid="b1d04d16-7d32-4e04-9f4f-8a3021ea1959"/>
+                            <box topPadding="5" leftPadding="5"/>
+                            <textElement>
+                                <font size="11"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$P{label_tva} + " " +$F{tva} + " %"]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="358" y="0" width="199" height="20"
+                                           uuid="7eac65c9-634f-49e7-8386-b03b85e9f6a5"/>
+                            <box topPadding="5" leftPadding="0" bottomPadding="0" rightPadding="5"/>
+                            <textElement textAlignment="Right">
+                                <font size="11" isBold="true"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$F{groupTVA} + " " + $P{currency}]]></textFieldExpression>
+                        </textField>
+                    </jr:listContents>
+                </jr:list>
+            </componentElement>
+        </band>
+    </background>
+    <title>
+        <band height="85" splitType="Stretch">
+            <componentElement>
+                <reportElement x="126" y="55" width="100" height="30" uuid="85de1efa-db44-4561-9465-afcddeaaa98c"/>
+                <jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                         xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                    <datasetRun subDataset="tva_list" uuid="106f26ad-073d-436e-9c45-b2a0c17e414d">
+                        <datasetParameter name="factureId">
+                            <datasetParameterExpression><![CDATA[$P{factureId}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="currency">
+                            <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                    </datasetRun>
+                    <jr:listContents height="30" width="100">
+                        <textField>
+                            <reportElement x="0" y="0" width="50" height="30"
+                                           uuid="dc4e6dc3-089c-486f-bec7-fb1a01d37827"/>
+                            <textFieldExpression><![CDATA[$F{tva}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="50" y="0" width="50" height="30"
+                                           uuid="9acb641c-1a24-4cef-ac83-b9a538f7698f"/>
+                            <textFieldExpression><![CDATA[$F{groupTVA}]]></textFieldExpression>
+                        </textField>
+                    </jr:listContents>
+                </jr:list>
+            </componentElement>
+        </band>
+    </title>
+</jasperReport>

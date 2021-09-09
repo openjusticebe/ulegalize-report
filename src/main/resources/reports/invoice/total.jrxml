@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xmlns="http://jasperreports.sourceforge.net/jasperreports"
+			  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+			  name="total" pageWidth="530" pageHeight="40" columnWidth="490" leftMargin="20" rightMargin="20"
+			  topMargin="5" bottomMargin="5" uuid="933ab169-c3bf-4393-b155-1ab20c9c9803">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+	<parameter name="label_total" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Le montant total à payer"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currency" class="java.lang.String">
+		<defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="factureId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{factureId}]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT sum(fd.ttc) total_ttc
+FROM t_facture_details fd
+WHERE id_facture =$P{factureId}
+group by id_facture]]>
+	</queryString>
+	<field name="total_ttc" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_ttc"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="260" height="30" uuid="689cc2b2-d699-4432-af1b-2e0fb7a310c7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="5"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{label_total}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="109" height="30" uuid="4c454bc0-aaaa-4c86-b503-12faaf911fd8">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_ttc}+" " +$P{currency}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

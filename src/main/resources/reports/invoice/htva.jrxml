@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="htva" pageWidth="510" pageHeight="38" columnWidth="470" leftMargin="20" rightMargin="20"
+              topMargin="5" bottomMargin="0" uuid="f7f857ca-ad36-40df-9301-7072ce85e949">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <parameter name="label_htva" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Montant HTVA"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="currency" class="java.lang.String">
+        <defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="factureId" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[$P{factureId}]]></defaultValueExpression>
+    </parameter>
+    <queryString language="SQL">
+        <![CDATA[SELECT sum(htva) cout_htva
+FROM t_facture_details
+WHERE id_facture =$P{factureId}
+group by id_facture]]>
+    </queryString>
+    <field name="cout_htva" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="cout_htva"/>
+        <property name="com.jaspersoft.studio.field.label" value="cout_htva"/>
+    </field>
+    <variable name="cout_htva1" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{cout_htva}]]></variableExpression>
+    </variable>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="33" splitType="Stretch">
+            <textField>
+                <reportElement x="-20" y="1" width="100" height="30" uuid="dce2ff0d-c3b3-444c-ab79-15ff249c5e9a">
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                </reportElement>
+                <box topPadding="5" leftPadding="5"/>
+                <textElement>
+                    <font size="11"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{label_htva}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="332" y="0" width="157" height="30" uuid="f008819a-b244-4ec4-9784-a026fe156105"/>
+                <box topPadding="5" rightPadding="5"/>
+                <textElement textAlignment="Right">
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{cout_htva}+ " " +$P{currency}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+</jasperReport>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="validate" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20" uuid="6cc3ac95-db38-4160-965a-80465ea122fb">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <parameter name="id_facture" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[$P{id_facture}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="validate" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{validate}]]></defaultValueExpression>
+    </parameter>
+    <queryString language="SQL">
+        <![CDATA[select is_valid from t_factures
+where id_facture = $P{id_facture}]]>
+    </queryString>
+    <field name="is_valid" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.label" value="is_valid"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="79" splitType="Stretch">
+            <textField>
+                <reportElement mode="Opaque" x="0" y="0" width="280" height="50" isRemoveLineWhenBlank="true"
+                               forecolor="#C9C9C9" uuid="95dd3684-4658-416c-a1f4-463283dd9cd2"/>
+                <textElement textAlignment="Center">
+                    <font size="30"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{is_valid} != 1 ? $P{validate} : ""]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+</jasperReport>
