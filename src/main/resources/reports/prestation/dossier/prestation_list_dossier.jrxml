@@ -16,16 +16,16 @@
     <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
     <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
     <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-    <style name="Alternate row" mode="Opaque" backcolor="rgba(222, 243, 252, 0.75686276)"/>
-    <style name="Style1" mode="Opaque" backcolor="#DBDBDB"/>
-    <style name="CopyOf_Alternate row1" mode="Opaque" backcolor="#FFFFFF">
-        <conditionalStyle>
-            <conditionExpression><![CDATA[$V{REPORT_COUNT}%2 ==0]]></conditionExpression>
-            <style mode="Opaque" backcolor="#DEF3FC"/>
-        </conditionalStyle>
-    </style>
-    <style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Alternate row" mode="Opaque" backcolor="rgba(222, 243, 252, 0.75686276)"/>
+	<style name="Style1" mode="Opaque" backcolor="#DBDBDB"/>
+	<style name="CopyOf_Alternate row1" mode="Opaque" backcolor="#FFFFFF">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 ==0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#DEF3FC"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -54,209 +54,239 @@
 		<paragraph lineSpacingSize="0.5"/>
 	</style>
 	<subDataset name="Dataset1" uuid="503bcd63-381e-415b-913a-cb5e717820f6">
-        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
-        <parameter name="vcKey" class="java.lang.String" nestedType="java.lang.String">
-            <defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
-        </parameter>
-        <parameter name="userId" class="java.lang.String">
-            <defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
-        </parameter>
-        <parameter name="startDate" class="java.util.Date">
-            <defaultValueExpression><![CDATA[$P{startDate}]]></defaultValueExpression>
-        </parameter>
-        <parameter name="endDate" class="java.util.Date">
-            <defaultValueExpression><![CDATA[$P{endDate}]]></defaultValueExpression>
-        </parameter>
-        <parameter name="currency" class="java.lang.String">
-            <defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
-        </parameter>
-        <parameter name="isShareDossier" class="java.util.Collection">
-            <defaultValueExpression><![CDATA[$P{isShareDossier}]]></defaultValueExpression>
-        </parameter>
-        <parameter name="clientId" class="java.lang.Integer">
-            <defaultValueExpression><![CDATA[$P{clientId}]]></defaultValueExpression>
-        </parameter>
-        <parameter name="responsibleId" class="java.lang.Integer">
-            <defaultValueExpression><![CDATA[$P{responsibleId}]]></defaultValueExpression>
-        </parameter>
-        <queryString language="SQL">
-            <![CDATA[select tu.initiales,
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+		<parameter name="vcKey" class="java.lang.String" nestedType="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="userId" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="startDate" class="java.util.Date">
+			<defaultValueExpression><![CDATA[$P{startDate}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="endDate" class="java.util.Date">
+			<defaultValueExpression><![CDATA[$P{endDate}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="currency" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="isShareDossier" class="java.util.Collection">
+			<defaultValueExpression><![CDATA[$P{isShareDossier}]]></defaultValueExpression>
+		</parameter>
+		<parameter name="dossierId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[select tu.initiales,
        td.year_doss,
-       ts.is_forfait,
-       ts.dh,
-       ts.dm,
-       client.client_name,
        tdt.type_desc,
        lpad(td.num_doss, 4, '0')                                                                    ndo,
        td.couthoraire                                                                               ch,
-       ts.date_action,
+       ts.*,
        round(if(ts.is_forfait = 0, ((ts.dh * 60 + ts.dm) / 60) * ts.couthoraire, ts.forfait_ht), 2) cout,
-       a.description                                                                                ts_desc 
-       from  t_timesheet  ts
-          inner join t_timesheet_type a on ts.ts_type=a.id_ts
-          inner join t_dossiers td on td.id_doss= ts.id_doss
-          inner join t_dossiers_type tdt on tdt.doss_type=td.doss_type
-          inner join t_dossier_rights dr on td.id_doss = dr.DOSSIER_ID
-          inner join t_virtualcab_users vcu on dr.VC_USER_ID = vcu.id
-                   left join (
-    select td.id_doss,
-           if(t_dossier_contact.contact_type_id <> 3,
-              (concat((coalesce(if(tcc.client_type = 1, CONCAT(tcc.f_nom, ' ', tcc.f_prenom), tcc.f_company), '')), ' / ',
-               ( coalesce(if(tpa.client_type = 1, CONCAT(tpa.f_nom, ' ', tpa.f_prenom), tpa.f_company),'')))
-                  ), tdt.type_desc
-               ) client_name
-    from t_dossiers td
-             inner join t_dossier_rights dr on td.id_doss = dr.DOSSIER_ID
-                          inner join t_dossiers_type tdt on tdt.doss_type = td.doss_type
-             inner join t_virtualcab_users vcu on dr.VC_USER_ID = vcu.id
-           left join t_dossier_contact as t_dossier_contact
-                       on t_dossier_contact.dossier_id = td.id_doss and t_dossier_contact.contact_type_id = 1
-             left join t_clients as tcc on t_dossier_contact.client_id = tcc.id_client
-             left join t_dossier_contact as t_dossier_contact2
-                       on t_dossier_contact2.dossier_id = td.id_doss and t_dossier_contact2.contact_type_id = 2
-             left join t_clients as tpa on t_dossier_contact2.client_id = tpa.id_client
-             left join t_dossier_contact as t_dossier_contact3
-                       on t_dossier_contact3.dossier_id = td.id_doss and t_dossier_contact3.contact_type_id = 3
-             left join t_clients as tclients4_ on t_dossier_contact3.client_id = tclients4_.id_client
-             inner join t_users tu on vcu.id_user = tu.id
-         WHERE vcu.vc_key=$P{vcKey}
-     AND vcu.id_user=$P{userId}
-       and (tcc.id_client like coalesce($P{clientId}, '%')  or tclients4_.id_client like coalesce($P{clientId}, '%'))
-    group by td.id_doss
-) client on client.id_doss = td.id_doss
-     inner join t_users tu on ts.id_gest=tu.id
+       a.description                                                                                ts_desc
+     from  t_timesheet  ts
+inner join t_timesheet_type a on ts.ts_type = a.id_ts
+         inner join t_dossiers td on td.id_doss = ts.id_doss
+         inner join t_dossiers_type tdt on tdt.doss_type = td.doss_type
+         inner join t_dossier_rights dr on td.id_doss = dr.DOSSIER_ID
+         inner join t_virtualcab_users vcu on dr.VC_USER_ID = vcu.id
+         inner join t_users tu on ts.id_gest = tu.id
      WHERE vcu.vc_key=$P{vcKey}
      AND vcu.id_user=$P{userId}
-     and ts.id_gest like coalesce($P{responsibleId}, '%')
+       and dr.DOSSIER_ID=$P{dossierId}
      AND $X{IN, dr.vc_owner, isShareDossier}
     and  ts.date_action between $P{startDate} and  $P{endDate}
-    and client.client_name is not null
-   ORDER BY ts.date_action desc]]>
-        </queryString>
-        <field name="initiales" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="initiales"/>
-            <property name="com.jaspersoft.studio.field.label" value="initiales"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_users"/>
-            <fieldDescription><![CDATA[]]></fieldDescription>
-        </field>
-        <field name="year_doss" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="year_doss"/>
-            <property name="com.jaspersoft.studio.field.label" value="year_doss"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
-            <fieldDescription><![CDATA[]]></fieldDescription>
-        </field>
-        <field name="is_forfait" class="java.lang.Integer">
-            <property name="com.jaspersoft.studio.field.name" value="is_forfait"/>
-            <property name="com.jaspersoft.studio.field.label" value="is_forfait"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
-            <fieldDescription><![CDATA[]]></fieldDescription>
-        </field>
-        <field name="dh" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="dh"/>
-            <property name="com.jaspersoft.studio.field.label" value="dh"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
-            <fieldDescription><![CDATA[]]></fieldDescription>
-        </field>
-        <field name="dm" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="dm"/>
-            <property name="com.jaspersoft.studio.field.label" value="dm"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
-            <fieldDescription><![CDATA[]]></fieldDescription>
-        </field>
-        <field name="client_name" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="client_name"/>
-            <property name="com.jaspersoft.studio.field.label" value="client_name"/>
-        </field>
-        <field name="type_desc" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="type_desc"/>
-            <property name="com.jaspersoft.studio.field.label" value="type_desc"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers_type"/>
-            <fieldDescription><![CDATA[]]></fieldDescription>
-        </field>
-        <field name="ndo" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="ndo"/>
-            <property name="com.jaspersoft.studio.field.label" value="ndo"/>
-        </field>
-        <field name="ch" class="java.lang.Integer">
-            <property name="com.jaspersoft.studio.field.name" value="couthoraire"/>
-            <property name="com.jaspersoft.studio.field.label" value="ch"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
-        </field>
-        <field name="date_action" class="java.sql.Date">
-            <property name="com.jaspersoft.studio.field.name" value="date_action"/>
-            <property name="com.jaspersoft.studio.field.label" value="date_action"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
-            <fieldDescription><![CDATA[]]></fieldDescription>
-        </field>
-        <field name="cout" class="java.lang.Double">
-            <property name="com.jaspersoft.studio.field.name" value="cout"/>
-            <property name="com.jaspersoft.studio.field.label" value="cout"/>
-        </field>
-        <field name="ts_desc" class="java.lang.String">
-            <property name="com.jaspersoft.studio.field.name" value="description"/>
-            <property name="com.jaspersoft.studio.field.label" value="ts_desc"/>
-            <property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet_type"/>
-        </field>
-    </subDataset>
-    <parameter name="vcKey" class="java.lang.String">
-        <defaultValueExpression><![CDATA["AVOTEST"]]></defaultValueExpression>
-    </parameter>
-    <parameter name="title" class="java.lang.String">
-        <defaultValueExpression><![CDATA["Prestations"]]></defaultValueExpression>
-    </parameter>
-    <parameter name="SUBREPORT_DIR" class="java.lang.String">
-        <defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
-    </parameter>
-    <parameter name="currency" class="java.lang.String">
-        <defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
-    </parameter>
-    <parameter name="userId" class="java.lang.Integer">
-        <defaultValueExpression><![CDATA[96]]></defaultValueExpression>
-    </parameter>
-    <parameter name="startDate" class="java.util.Date">
-        <defaultValueExpression><![CDATA[DATE(2019,1,1)]]></defaultValueExpression>
-    </parameter>
-    <parameter name="endDate" class="java.util.Date">
-        <defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
-    </parameter>
-    <parameter name="periodLbl" class="java.lang.String">
-        <defaultValueExpression><![CDATA["Période : "]]></defaultValueExpression>
-    </parameter>
-    <parameter name="numberLbl" class="java.lang.String" isForPrompting="false">
-        <defaultValueExpression><![CDATA["Nombre"]]></defaultValueExpression>
-    </parameter>
-    <parameter name="costLbl" class="java.lang.String" isForPrompting="false">
-        <defaultValueExpression><![CDATA["Cout total: "]]></defaultValueExpression>
-    </parameter>
-    <parameter name="timeLbl" class="java.lang.String" isForPrompting="false">
-        <defaultValueExpression><![CDATA["Temps total: "]]></defaultValueExpression>
-    </parameter>
-    <parameter name="isShareDossier" class="java.util.Collection" nestedType="java.lang.Long"/>
-    <parameter name="responsibleId" class="java.lang.Integer">
-        <defaultValueExpression><![CDATA[null]]></defaultValueExpression>
-    </parameter>
-    <parameter name="clientId" class="java.lang.Integer"/>
-    <queryString>
-        <![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
-    </queryString>
-    <field name="key" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.label" value="key"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-    </field>
-    <field name="email" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.label" value="email"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-    </field>
-    <field name="name" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.label" value="name"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-    </field>
-    <field name="abbreviation" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.label" value="abbreviation"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-    </field>
-    <field name="alias" class="java.lang.String">
+    ORDER BY ts.date_action desc]]>
+		</queryString>
+		<field name="initiales" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="initiales"/>
+			<property name="com.jaspersoft.studio.field.label" value="initiales"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_users"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="year_doss" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="year_doss"/>
+			<property name="com.jaspersoft.studio.field.label" value="year_doss"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="type_desc" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="type_desc"/>
+			<property name="com.jaspersoft.studio.field.label" value="type_desc"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers_type"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ndo" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="ndo"/>
+			<property name="com.jaspersoft.studio.field.label" value="ndo"/>
+		</field>
+		<field name="ch" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="couthoraire"/>
+			<property name="com.jaspersoft.studio.field.label" value="ch"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+		</field>
+		<field name="id_ts" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.name" value="id_ts"/>
+			<property name="com.jaspersoft.studio.field.label" value="id_ts"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="id_doss" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.name" value="id_doss"/>
+			<property name="com.jaspersoft.studio.field.label" value="id_doss"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="id_gest" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.name" value="id_gest"/>
+			<property name="com.jaspersoft.studio.field.label" value="id_gest"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ts_type" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="ts_type"/>
+			<property name="com.jaspersoft.studio.field.label" value="ts_type"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="couthoraire" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.name" value="couthoraire"/>
+			<property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="date_action" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.name" value="date_action"/>
+			<property name="com.jaspersoft.studio.field.label" value="date_action"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="dh" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="dh"/>
+			<property name="com.jaspersoft.studio.field.label" value="dh"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="dm" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="dm"/>
+			<property name="com.jaspersoft.studio.field.label" value="dm"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="comment" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="comment"/>
+			<property name="com.jaspersoft.studio.field.label" value="comment"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="user_upd" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="user_upd"/>
+			<property name="com.jaspersoft.studio.field.label" value="user_upd"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="date_upd" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.name" value="date_upd"/>
+			<property name="com.jaspersoft.studio.field.label" value="date_upd"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mapping_migration" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="mapping_migration"/>
+			<property name="com.jaspersoft.studio.field.label" value="mapping_migration"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="vat" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="vat"/>
+			<property name="com.jaspersoft.studio.field.label" value="vat"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="is_forfait" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="is_forfait"/>
+			<property name="com.jaspersoft.studio.field.label" value="is_forfait"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="forfait_ht" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="forfait_ht"/>
+			<property name="com.jaspersoft.studio.field.label" value="forfait_ht"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet"/>
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="cout" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="cout"/>
+			<property name="com.jaspersoft.studio.field.label" value="cout"/>
+		</field>
+		<field name="ts_desc" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="description"/>
+			<property name="com.jaspersoft.studio.field.label" value="ts_desc"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="t_timesheet_type"/>
+		</field>
+	</subDataset>
+	<parameter name="vcKey" class="java.lang.String">
+		<defaultValueExpression><![CDATA["AVOTEST"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="title" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Prestations"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currency" class="java.lang.String">
+		<defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[96]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[DATE(2019,01,1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="periodLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Période : "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numberLbl" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Nombre"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="costLbl" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Cout total: "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="timeLbl" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Temps total: "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="isShareDossier" class="java.util.Collection" nestedType="java.lang.Long"/>
+	<parameter name="dossierId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5080]]></defaultValueExpression>
+	</parameter>
+	<parameter name="refLbl" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Nos références : "]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
+	</queryString>
+	<field name="key" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="key"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="abbreviation" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="abbreviation"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+	</field>
+	<field name="alias" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="alias"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
 	</field>
@@ -368,9 +398,9 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="130">
+		<band height="215">
 			<textField>
-				<reportElement x="146" y="40" width="520" height="30" uuid="60d978e9-d572-4ac0-8ee3-5c5ff1a9ccc5"/>
+				<reportElement x="312" y="140" width="220" height="30" uuid="60d978e9-d572-4ac0-8ee3-5c5ff1a9ccc5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -388,19 +418,32 @@
 				<textFieldExpression><![CDATA[$F{key}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="146" y="80" width="530" height="30" uuid="2e1355fd-2d63-4b01-b71b-c22afbdfa362"/>
+				<reportElement x="140" y="183" width="530" height="30" uuid="2e1355fd-2d63-4b01-b71b-c22afbdfa362"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true" isUnderline="true"/>
 				</textElement>
                 <textFieldExpression>
                     <![CDATA[$P{periodLbl} + new SimpleDateFormat("yyyy-MM-dd").format( $P{startDate}) + " - " +  new SimpleDateFormat("yyyy-MM-dd").format( $P{endDate})]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="527" y="4" width="267" height="158" uuid="00b545fa-4485-4cba-9858-dd1f8a6416a0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="dossierId">
+					<subreportParameterExpression><![CDATA[$P{dossierId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="refLbl">
+					<subreportParameterExpression><![CDATA[$P{refLbl}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["prestation/dossier/reference.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageHeader>
 	<detail>
-        <band height="340" splitType="Stretch">
+		<band height="340" splitType="Stretch">
             <componentElement>
-                <reportElement positionType="Float" x="20" y="20" width="772" height="80"
+                <reportElement positionType="Float" x="20" y="47" width="772" height="80"
                                uuid="e61d9fa6-8049-486e-8121-c3dba883fd9b">
                     <property name="com.jaspersoft.studio.layout"
                               value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
@@ -411,7 +454,7 @@
                 </reportElement>
                 <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
                           xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                    <datasetRun subDataset="Dataset1" uuid="289919ec-8420-407c-a38a-cc6485b2d7e5">
+                    <datasetRun subDataset="Dataset1" uuid="e8bb3615-de47-4e3f-b8ab-1bc9e5703e4f">
                         <datasetParameter name="vcKey">
                             <datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
                         </datasetParameter>
@@ -421,34 +464,31 @@
                         <datasetParameter name="startDate">
                             <datasetParameterExpression><![CDATA[$P{startDate}]]></datasetParameterExpression>
                         </datasetParameter>
-                        <datasetParameter name="endDate">
-                            <datasetParameterExpression><![CDATA[$P{endDate}]]></datasetParameterExpression>
-                        </datasetParameter>
-                        <datasetParameter name="currency">
-                            <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
-                        </datasetParameter>
-                        <datasetParameter name="isShareDossier">
-                            <datasetParameterExpression><![CDATA[$P{isShareDossier}]]></datasetParameterExpression>
-                        </datasetParameter>
-                        <datasetParameter name="responsibleId">
-                            <datasetParameterExpression><![CDATA[$P{responsibleId}]]></datasetParameterExpression>
-                        </datasetParameter>
-                        <datasetParameter name="clientId">
-                            <datasetParameterExpression><![CDATA[$P{clientId}]]></datasetParameterExpression>
-                        </datasetParameter>
-                        <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                    </datasetRun>
-                    <jr:column width="280" uuid="61c58e99-23f3-45ce-b62b-0f6b664ec330">
-                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-                        <jr:tableHeader style="Table_TH" height="30" rowSpan="1">
-                            <staticText>
+						<datasetParameter name="endDate">
+							<datasetParameterExpression><![CDATA[$P{endDate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="currency">
+							<datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="isShareDossier">
+							<datasetParameterExpression><![CDATA[$P{isShareDossier}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="dossierId">
+							<datasetParameterExpression><![CDATA[$P{dossierId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="280" uuid="61c58e99-23f3-45ce-b62b-0f6b664ec330">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
                                 <reportElement x="0" y="0" width="280" height="30"
                                                uuid="5b454061-9b28-4168-a9f0-c360ed58fb07"/>
-                                <textElement textAlignment="Center" verticalAlignment="Middle">
-                                    <font size="14"/>
-                                </textElement>
-                                <text><![CDATA[Dossier]]></text>
-                            </staticText>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14"/>
+								</textElement>
+								<text><![CDATA[Note]]></text>
+							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
@@ -459,7 +499,7 @@
 									<paragraph lineSpacingSize="0.5"/>
 								</textElement>
                                 <textFieldExpression>
-                                    <![CDATA[$F{year_doss} +"/"+$F{ndo} + " " + ($F{client_name} != null ? $F{client_name} : "")]]></textFieldExpression>
+                                    <![CDATA[$F{comment} != null ? $F{comment} : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -472,7 +512,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="14"/>
 								</textElement>
-                                <text><![CDATA[Type]]></text>
+								<text><![CDATA[Type]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
@@ -536,16 +576,16 @@
 					<jr:column width="90" uuid="e8a1577c-1c37-4973-96dc-ce8d437ff98d">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
-                            <staticText>
+							<staticText>
                                 <reportElement x="0" y="0" width="90" height="30"
                                                uuid="a68edc73-d7ea-4768-8869-0865d9f144c7">
                                     <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
                                 </reportElement>
-                                <textElement textAlignment="Center" verticalAlignment="Middle">
-                                    <font size="14"/>
-                                </textElement>
-                                <text><![CDATA[Temps]]></text>
-                            </staticText>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14"/>
+								</textElement>
+								<text><![CDATA[Temps]]></text>
+							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
@@ -608,47 +648,44 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
-            <subreport>
+			<subreport>
                 <reportElement positionType="Float" x="470" y="170" width="300" height="150"
                                uuid="1f07fbb6-3cc7-45fc-9ef0-ff57d59c8956">
                     <property name="com.jaspersoft.studio.unit.width" value="px"/>
                 </reportElement>
-                <subreportParameter name="vcKey">
-                    <subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="userId">
-                    <subreportParameterExpression><![CDATA[$P{userId}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="startDate">
-                    <subreportParameterExpression><![CDATA[$P{startDate}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="endDate">
-                    <subreportParameterExpression><![CDATA[$P{endDate}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="currency">
-                    <subreportParameterExpression><![CDATA[$P{currency}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="numberLbl">
-                    <subreportParameterExpression><![CDATA[$P{numberLbl}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="costLbl">
-                    <subreportParameterExpression><![CDATA[$P{costLbl}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="timeLbl">
-                    <subreportParameterExpression><![CDATA[$P{timeLbl}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="isShareDossier">
-                    <subreportParameterExpression><![CDATA[$P{isShareDossier}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="clientId">
-                    <subreportParameterExpression><![CDATA[$P{clientId}]]></subreportParameterExpression>
-                </subreportParameter>
-                <subreportParameter name="responsibleId">
-                    <subreportParameterExpression><![CDATA[$P{responsibleId}]]></subreportParameterExpression>
-                </subreportParameter>
-                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "total.jasper"]]></subreportExpression>
-            </subreport>
+				<subreportParameter name="vcKey">
+					<subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="userId">
+					<subreportParameterExpression><![CDATA[$P{userId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="startDate">
+					<subreportParameterExpression><![CDATA[$P{startDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="endDate">
+					<subreportParameterExpression><![CDATA[$P{endDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="currency">
+					<subreportParameterExpression><![CDATA[$P{currency}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="numberLbl">
+					<subreportParameterExpression><![CDATA[$P{numberLbl}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="costLbl">
+					<subreportParameterExpression><![CDATA[$P{costLbl}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="timeLbl">
+					<subreportParameterExpression><![CDATA[$P{timeLbl}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="isShareDossier">
+					<subreportParameterExpression><![CDATA[$P{isShareDossier}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dossierId">
+					<subreportParameterExpression><![CDATA[$P{dossierId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "total.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 </jasperReport>

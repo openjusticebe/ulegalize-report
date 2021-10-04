@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="reference" pageWidth="267" pageHeight="158" orientation="Landscape" columnWidth="247"
+              leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10"
+              uuid="59f58b3f-fb6e-4276-8180-19349e386ab4">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <parameter name="dossierId" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="refLbl" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{refLbl}]]></defaultValueExpression>
+    </parameter>
+    <queryString language="SQL">
+        <![CDATA[select td.year_doss, lpad(td.num_doss,4,'0') num_doss,
+       tclients2_.f_prenom, tclients2_.f_nom,
+       tclients2_.f_rue, tclients2_.f_num, tclients2_.f_cp, tclients2_.f_ville,
+       tclients3_.f_prenom adversePrenom, tclients3_.f_nom adverseNom,
+    tclients4_.f_prenom partie_name, tclients4_.f_nom partie_firstname,
+    t_dossier_contact.contact_type_id
+from t_dossiers td
+         left join t_dossier_contact as t_dossier_contact on t_dossier_contact.dossier_id = td.id_doss
+         left join t_clients as tclients2_ on t_dossier_contact.client_id = tclients2_.id_client and t_dossier_contact.contact_type_id = 1
+         left join t_clients as tclients3_ on t_dossier_contact.client_id = tclients3_.id_client and t_dossier_contact.contact_type_id = 2
+         left join t_clients as tclients4_ on t_dossier_contact.client_id = tclients4_.id_client and t_dossier_contact.contact_type_id = 3
+where td.id_doss = $P{dossierId}
+GROUP BY  td.year_doss, td.num_doss]]>
+    </queryString>
+    <field name="year_doss" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="year_doss"/>
+        <property name="com.jaspersoft.studio.field.label" value="year_doss"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="num_doss" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="num_doss"/>
+        <property name="com.jaspersoft.studio.field.label" value="num_doss"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="f_prenom" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_prenom"/>
+        <property name="com.jaspersoft.studio.field.label" value="f_prenom"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="f_nom" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_nom"/>
+        <property name="com.jaspersoft.studio.field.label" value="f_nom"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="f_rue" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_rue"/>
+        <property name="com.jaspersoft.studio.field.label" value="f_rue"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="f_num" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_num"/>
+        <property name="com.jaspersoft.studio.field.label" value="f_num"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="f_cp" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_cp"/>
+        <property name="com.jaspersoft.studio.field.label" value="f_cp"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="f_ville" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_ville"/>
+        <property name="com.jaspersoft.studio.field.label" value="f_ville"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <field name="adversePrenom" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_prenom"/>
+        <property name="com.jaspersoft.studio.field.label" value="adversePrenom"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+    </field>
+    <field name="adverseNom" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_nom"/>
+        <property name="com.jaspersoft.studio.field.label" value="adverseNom"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+    </field>
+    <field name="partie_name" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_prenom"/>
+        <property name="com.jaspersoft.studio.field.label" value="partie_name"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+    </field>
+    <field name="partie_firstname" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="f_nom"/>
+        <property name="com.jaspersoft.studio.field.label" value="partie_firstname"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+    </field>
+    <field name="contact_type_id" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.name" value="contact_type_id"/>
+        <property name="com.jaspersoft.studio.field.label" value="contact_type_id"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossier_contact"/>
+        <fieldDescription><![CDATA[]]></fieldDescription>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <summary>
+        <band height="138" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+            <property name="com.jaspersoft.studio.layout"/>
+            <textField>
+                <reportElement x="3" y="3" width="111" height="16" uuid="8568d8f5-a235-4abe-a8ec-b2fa40bfaac9"/>
+                <textElement>
+                    <font size="10" isBold="true"/>
+                    <paragraph lineSpacingSize="0.0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{refLbl}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="114" y="3" width="126" height="16" uuid="75a8c886-4d42-4a3b-b0da-3b5986ff4f2d"/>
+                <textElement>
+                    <font size="10" isBold="true"/>
+                    <paragraph lineSpacingSize="0.0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{year_doss} +"/"+$F{num_doss}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="3" y="20" width="237" height="30" uuid="0e761c0b-b4f0-428d-a4dc-8b9f785fb969"/>
+                <textElement>
+                    <font size="10" isBold="true"/>
+                    <paragraph lineSpacingSize="0.0"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{contact_type_id} != 3 ? $F{f_nom} + " "+$F{f_prenom} + " / " + $F{adverseNom} + " "+$F{adversePrenom} : $F{partie_name} +" "+$F{partie_firstname}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="3" y="67" width="221" height="20" uuid="bfd76a8c-aad0-4491-ae10-7ed5f2a1c3f3"/>
+                <textElement>
+                    <font size="10" isBold="true"/>
+                    <paragraph lineSpacingSize="0.0"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{contact_type_id} != 3 ? $F{f_nom} + " "+$F{f_prenom} : $F{partie_name} +" "+$F{partie_firstname}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="3" y="87" width="221" height="22" uuid="0a8ec6a2-fbb9-4f72-9bca-7ccff4f68722"/>
+                <textElement>
+                    <font size="10" isBold="true"/>
+                    <paragraph lineSpacingSize="0.0"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{contact_type_id} != 3 ? $F{f_rue} +" " + $F{f_num} : ""]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="3" y="110" width="221" height="18" uuid="37672769-83ef-45d2-b107-8620458de496"/>
+                <textElement>
+                    <font size="10" isBold="true"/>
+                    <paragraph lineSpacingSize="0.0"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{contact_type_id} != 3 ? $F{f_cp} +" "+$F{f_ville} : ""]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

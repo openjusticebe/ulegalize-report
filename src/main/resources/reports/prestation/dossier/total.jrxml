@@ -34,7 +34,7 @@
     <parameter name="timeLbl" class="java.lang.String" isForPrompting="false">
         <defaultValueExpression><![CDATA[$P{timeLbl}]]></defaultValueExpression>
     </parameter>
-    <parameter name="startDate" class="java.util.Date">
+    <parameter name="startDate" class="java.util.Date" isForPrompting="false">
         <defaultValueExpression><![CDATA[$P{startDate}]]></defaultValueExpression>
     </parameter>
     <parameter name="endDate" class="java.util.Date" isForPrompting="false">
@@ -43,11 +43,8 @@
     <parameter name="isShareDossier" class="java.util.Collection" isForPrompting="false">
         <defaultValueExpression><![CDATA[$P{isShareDossier}]]></defaultValueExpression>
     </parameter>
-    <parameter name="clientId" class="java.lang.Integer">
-        <defaultValueExpression><![CDATA[$P{clientId}]]></defaultValueExpression>
-    </parameter>
-    <parameter name="responsibleId" class="java.lang.Integer">
-        <defaultValueExpression><![CDATA[$P{responsibleId}]]></defaultValueExpression>
+    <parameter name="dossierId" class="java.lang.Integer" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
     </parameter>
     <queryString>
         <![CDATA[select
@@ -55,80 +52,56 @@
        sum(round(   if(  ts.is_forfait = 0,   (( ts.dh * 60 +  ts.dm) / 60) *  ts.couthoraire  ,  ts.forfait_ht),2)) total,
        sum(ts.dh) dh,
        sum(ts.dm) dm
-from  t_timesheet  ts
- inner join t_timesheet_type a on ts.ts_type = a.id_ts
-         inner join t_dossiers td on td.id_doss = ts.id_doss
-         inner join t_dossiers_type tdt on tdt.doss_type = td.doss_type
-         inner join t_dossier_rights dr on td.id_doss = dr.DOSSIER_ID
-         inner join t_virtualcab_users vcu on dr.VC_USER_ID = vcu.id  
-                  left join (
-    select td.id_doss,
-           if(t_dossier_contact.contact_type_id <> 3,
-              (concat((coalesce(if(tcc.client_type = 1, CONCAT(tcc.f_nom, ' ', tcc.f_prenom), tcc.f_company), '')), ' / ',
-               ( coalesce(if(tpa.client_type = 1, CONCAT(tpa.f_nom, ' ', tpa.f_prenom), tpa.f_company),'')))
-                  ), tdt.type_desc
-               ) client_name
-    from t_dossiers td
-             inner join t_dossier_rights dr on td.id_doss = dr.DOSSIER_ID
-             inner join t_dossiers_type tdt on tdt.doss_type = td.doss_type
-             inner join t_virtualcab_users vcu on dr.VC_USER_ID = vcu.id
-             left join t_dossier_contact as t_dossier_contact
-                       on t_dossier_contact.dossier_id = td.id_doss and t_dossier_contact.contact_type_id = 1
-             left join t_clients as tcc on t_dossier_contact.client_id = tcc.id_client
-             left join t_dossier_contact as t_dossier_contact2
-                       on t_dossier_contact2.dossier_id = td.id_doss and t_dossier_contact2.contact_type_id = 2
-             left join t_clients as tpa on t_dossier_contact2.client_id = tpa.id_client
-             left join t_dossier_contact as t_dossier_contact3
-                       on t_dossier_contact3.dossier_id = td.id_doss and t_dossier_contact3.contact_type_id = 3
-             left join t_clients as tclients4_ on t_dossier_contact3.client_id = tclients4_.id_client
-             inner join t_users tu on vcu.id_user = tu.id
-    WHERE vcu.vc_key = $P{vcKey}
-      AND vcu.id_user = $P{userId}
-    and (tcc.id_client like coalesce($P{clientId}, '%') or tclients4_.id_client like coalesce($P{clientId}, '%'))
-    group by td.id_doss
-) client on client.id_doss = td.id_doss
- inner join t_users tu on vcu.id_user = tu.id
-  WHERE vcu.vc_key=$P{vcKey}
+from  t_timesheet  ts,t_timesheet_type a,
+      t_dossiers td, t_virtualcab_users vcu, t_dossier_rights dr,
+      t_dossiers_type tdt,t_users tu
+WHERE vcu.vc_key=$P{vcKey}
   AND vcu.id_user= $P{userId}
-  and ts.id_gest like coalesce($P{responsibleId}, '%')
-  AND $X{IN, dr.vc_owner, isShareDossier}
-    and  ts.date_action between $P{startDate} and  $P{endDate} 
-    and client.client_name is not null]]>
-	</queryString>
-	<field name="count(ts.id_ts)" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="count(ts.id_ts)"/>
-		<property name="com.jaspersoft.studio.field.label" value="count(ts.id_ts)"/>
-	</field>
-	<field name="total" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="total"/>
-		<property name="com.jaspersoft.studio.field.label" value="total"/>
-	</field>
-	<field name="dh" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="dh"/>
-		<property name="com.jaspersoft.studio.field.label" value="dh"/>
-	</field>
-	<field name="dm" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="dm"/>
-		<property name="com.jaspersoft.studio.field.label" value="dm"/>
-	</field>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+  AND dr.VC_USER_ID = vcu.id
+       and dr.DOSSIER_ID=$P{dossierId}
+ AND $X{IN, dr.vc_owner, isShareDossier}
+  AND td.id_doss = dr.DOSSIER_ID
+  and td.id_doss= ts.id_doss
+    and  ts.date_action between $P{startDate} and  $P{endDate}
+  and ts.ts_type=a.id_ts
+   and tdt.doss_type=td.doss_type
+  and ts.id_gest=tu.id]]>
+    </queryString>
+    <field name="count(ts.id_ts)" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.name" value="count(ts.id_ts)"/>
+        <property name="com.jaspersoft.studio.field.label" value="count(ts.id_ts)"/>
+    </field>
+    <field name="total" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.name" value="total"/>
+        <property name="com.jaspersoft.studio.field.label" value="total"/>
+    </field>
+    <field name="dh" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.name" value="dh"/>
+        <property name="com.jaspersoft.studio.field.label" value="dh"/>
+    </field>
+    <field name="dm" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.name" value="dm"/>
+        <property name="com.jaspersoft.studio.field.label" value="dm"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
     <summary>
         <band height="110" splitType="Stretch">
             <textField>
-                <reportElement x="70" y="10" width="180" height="30" uuid="ab52d572-6fb7-4a29-9121-63330af1ad1f"/>
+                <reportElement x="100" y="10" width="150" height="30" uuid="ab52d572-6fb7-4a29-9121-63330af1ad1f"/>
                 <textElement textAlignment="Right">
                     <font size="14" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$P{numberLbl} + $F{count(ts.id_ts)}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="60" y="42" width="190" height="30" uuid="0c8067a3-c75b-4c6d-b587-a9c992487198"/>
+                <reportElement x="100" y="42" width="150" height="30" uuid="0c8067a3-c75b-4c6d-b587-a9c992487198"/>
                 <textElement textAlignment="Right">
                     <font size="14" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$P{costLbl} + $F{total} +" "+$P{currency}]]></textFieldExpression>
+                <textFieldExpression>
+                    <![CDATA[$P{costLbl} + ($F{total} != null ? $F{total} : 0) +" "+$P{currency}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="40" y="74" width="210" height="30" uuid="b469a1de-e5f5-4ad4-9d85-d0f9b2f7f786"/>
@@ -136,7 +109,7 @@ from  t_timesheet  ts
                     <font size="14" isBold="true"/>
                 </textElement>
                 <textFieldExpression>
-                    <![CDATA[$P{timeLbl} +( ($F{dh} != null ? ($F{dh}).intValue() : 0 )+  ($F{dm} != null ? (($F{dm}).intValue()/60) : 0)) +":" + (  String.format("%02d", ($F{dm}).intValue()%60))]]></textFieldExpression>
+                    <![CDATA[$P{timeLbl} +( ($F{dh} != null ? ($F{dh}).intValue() : 0 )+  ($F{dm} != null ? (($F{dm}).intValue()/60) : 0)) +":" + (  $F{dm} != null ? String.format("%02d", ($F{dm}).intValue()%60) : 0)]]></textFieldExpression>
             </textField>
         </band>
     </summary>

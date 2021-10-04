@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="total" pageWidth="300" pageHeight="150" columnWidth="260" leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20" uuid="c8e58188-afa8-4ef4-8f90-3e9d381aab82">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <parameter name="vcKey" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="userId" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaClient" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaClient}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="numberLbl" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{numberLbl}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaYear" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaYear}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaNumber" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaNumber}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaInitiale" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaInitiale}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaBalance" class="java.lang.Boolean">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaBalance}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchArchived" class="java.lang.Boolean">
+        <defaultValueExpression><![CDATA[$P{searchArchived}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="isShareDossier" class="java.util.Collection" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{isShareDossier}]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+        <![CDATA[select count(tdossiers0_.id_doss)
+            from t_dossiers tdossiers0_ 
+            inner join t_dossier_rights dossierrig1_ on tdossiers0_.id_doss = dossierrig1_.dossier_id 
+           
+            left join (
+            select distinct tu2.vc_key, d.id_doss from t_dossiers d
+            inner join t_dossier_rights dr on d.id_doss = dr.dossier_id
+            inner join t_virtualcab_users tu2 on tu2.id = dr.VC_USER_ID
+            where  dr.VC_OWNER = 1
+            ) owner on owner.id_doss = tdossiers0_.id_doss 
+            inner join t_users users on users.id = tdossiers0_.id_user_resp 
+            inner join t_virtualcab_users tu on tu.id = dossierrig1_.VC_USER_ID 
+            left join t_dossier_contact as t_dossier_contact on t_dossier_contact.dossier_id = tdossiers0_.id_doss and t_dossier_contact.contact_type_id = 1 
+            left join t_clients as tclients2_ on t_dossier_contact.client_id = tclients2_.id_client 
+            left join t_dossier_contact as t_dossier_contact2 on t_dossier_contact2.dossier_id = tdossiers0_.id_doss and t_dossier_contact2.contact_type_id = 2
+            left join t_clients as tclients3_ on t_dossier_contact2.client_id = tclients3_.id_client
+            left join t_dossier_contact as t_dossier_contact3 on t_dossier_contact3.dossier_id = tdossiers0_.id_doss and t_dossier_contact3.contact_type_id = 3
+            left join t_clients as tclients4_ on t_dossier_contact3.client_id = tclients4_.id_client
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.is_forfait = 1) THEN d.forfait_ht ELSE (( (( (d.dh * 60) + d.dm ) / 60 ) * d.couthoraire ) ) END), 0), 2) cout 
+            from t_timesheet d) xx group by id_doss
+            ) presta on dossierrig1_.DOSSIER_ID=presta.id_doss
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE((d.unit*d.price_per_unit), 0), 2) cout 
+            from t_debour d 
+            ) xx group by id_doss 
+            ) fraisadmin on dossierrig1_.DOSSIER_ID=fraisadmin.id_doss 
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0),2) cout 
+            from t_frais d 
+            join ref_poste poste on poste.id_poste = d.id_poste 
+            join ref_compte compte on compte.id_compte = d.id_compte 
+            and poste.is_frais_collaboration = 1 
+            and compte.account_type_id = 1
+                         ) xx group by id_doss
+                         ) fraisCollaboration on dossierrig1_.DOSSIER_ID=fraisCollaboration.id_doss 
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0),2) cout 
+            from t_frais d 
+            join ref_poste poste on poste.id_poste = d.id_poste 
+            join ref_compte compte on compte.id_compte = d.id_compte 
+            and poste.is_frais_procedure = 1 
+            and compte.account_type_id = 1
+                         ) xx group by id_doss
+                         ) fraisProcedure on dossierrig1_.DOSSIER_ID=fraisProcedure.id_doss 
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.id_type > 1) THEN d.montantht ELSE (-d.montantht) END), 0),2) cout 
+            from t_frais d 
+            join ref_poste poste on poste.id_poste = d.id_poste 
+            join ref_compte compte on compte.id_compte = d.id_compte 
+            and poste.is_honoraires = 1 
+            and compte.account_type_id = 1
+                         ) xx group by id_doss
+                         ) honoraire on dossierrig1_.DOSSIER_ID=honoraire.id_doss 
+            where tu.id_user = $P{userId}  and tu.vc_key = $P{vcKey}
+             AND $X{IN, dossierrig1_.vc_owner, isShareDossier}
+            and (
+            tclients2_.f_prenom like CONCAT('%', $P{searchCriteriaClient}, '%') or tclients2_.f_nom like CONCAT('%', $P{searchCriteriaClient}, '%') 
+            or tclients3_.f_prenom like CONCAT('%', $P{searchCriteriaClient}, '%') or tclients3_.f_nom like CONCAT('%', $P{searchCriteriaClient}, '%') 
+            or tclients4_.f_prenom like CONCAT('%', $P{searchCriteriaClient}, '%') or tclients4_.f_nom like CONCAT('%', $P{searchCriteriaClient}, '%') 
+            )
+              and (tdossiers0_.year_doss like COALESCE(CONCAT('%',$P{searchCriteriaYear}, '%'), '%') and tdossiers0_.num_doss like COALESCE(CONCAT($P{searchCriteriaNumber}, '%'), '%')) 
+            and users.initiales like CONCAT('%', $P{searchCriteriaInitiale}, '%')
+             and (case when $P{searchCriteriaBalance} = 1 then round(ifnull(presta.cout,0), 2)+ ifnull(fraisadmin.cout,0)+ ifnull(fraisProcedure.cout,0)+ ifnull(fraisCollaboration.cout,0) + ifnull(honoraire.cout,0) <> 0 
+            when $P{searchCriteriaBalance} = 0 then round(ifnull(presta.cout,0), 2)+ ifnull(fraisadmin.cout,0)+ ifnull(fraisProcedure.cout,0)+ ifnull(fraisCollaboration.cout,0)+ ifnull(honoraire.cout,0) =0 else 1=1 end)
+             and (case when $P{searchArchived} = 0 then tdossiers0_.date_close is null 
+            when $P{searchArchived} = 1 then tdossiers0_.date_close is not null else 1=1 end)
+            limit 100]]>
+    </queryString>
+    <field name="count(tdossiers0_.id_doss)" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.name" value="count(tdossiers0_.id_doss)"/>
+        <property name="com.jaspersoft.studio.field.label" value="count(tdossiers0_.id_doss)"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <summary>
+        <band height="110" splitType="Stretch">
+            <textField>
+                <reportElement x="100" y="10" width="150" height="30" uuid="ab52d572-6fb7-4a29-9121-63330af1ad1f"/>
+                <textElement textAlignment="Right">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$P{numberLbl} + ($F{count(tdossiers0_.id_doss)} != null ? $F{count(tdossiers0_.id_doss)} : 0)]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

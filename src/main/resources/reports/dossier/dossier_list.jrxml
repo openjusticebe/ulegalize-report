@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="prestation_list" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true"
+              uuid="1970068f-ecb4-4350-ba05-5d6cbf7777c5">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <style name="Alternate row" mode="Opaque" backcolor="rgba(222, 243, 252, 0.75686276)"/>
+    <style name="Style1" mode="Opaque" backcolor="#DBDBDB"/>
+    <style name="CopyOf_Alternate row1" mode="Opaque" backcolor="#FFFFFF">
+        <conditionalStyle>
+            <conditionExpression><![CDATA[$V{REPORT_COUNT}%2 ==0]]></conditionExpression>
+            <style mode="Opaque" backcolor="#DEF3FC"/>
+        </conditionalStyle>
+    </style>
+    <style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+        <paragraph lineSpacingSize="0.5"/>
+    </style>
+    <subDataset name="Dataset1" uuid="503bcd63-381e-415b-913a-cb5e717820f6">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+        <parameter name="vcKey" class="java.lang.String" nestedType="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="userId" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="currency" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="isShareDossier" class="java.util.Collection">
+            <defaultValueExpression><![CDATA[$P{isShareDossier}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="searchCriteriaClient" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{searchCriteriaClient}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="searchCriteriaYear" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{searchCriteriaYear}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="searchCriteriaNumber" class="java.lang.Integer">
+            <defaultValueExpression><![CDATA[$P{searchCriteriaNumber}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="searchCriteriaInitiale" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{searchCriteriaInitiale}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="searchCriteriaBalance" class="java.lang.Boolean">
+            <defaultValueExpression><![CDATA[$P{searchCriteriaBalance}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="searchArchived" class="java.lang.Boolean">
+            <defaultValueExpression><![CDATA[$P{searchArchived}]]></defaultValueExpression>
+        </parameter>
+        <queryString language="SQL">
+            <![CDATA[select tdossiers0_.id_doss as id, tdossiers0_.year_doss as year, tdossiers0_.num_doss as num, users.initiales,
+            tclients2_.f_prenom as firstnameClient, tclients2_.f_nom as lastnameClient, tclients2_.f_company as companyClient, tclients2_.id_client as idClient, 
+            tclients3_.f_prenom as adverseFirstnameClient, tclients3_.f_nom as adverseLastnameClient, tclients3_.f_company as adverseCompanyClient, tclients3_.id_client as adverseIdClient, 
+            round(ifnull(presta.cout,0), 2)+ ifnull(fraisadmin.cout,0)+ ifnull(fraisProcedure.cout,0)+ ifnull(fraisCollaboration.cout,0) - ifnull(honoraire.cout,0) balance,
+            owner.vc_key as vckeyOwner,
+            tdossiers0_.date_close as closeDossier,
+            tdossiers0_.doss_type as type
+            from t_dossiers tdossiers0_ 
+            inner join t_dossier_rights dossierrig1_ on tdossiers0_.id_doss = dossierrig1_.dossier_id 
+            
+            left join (
+            select distinct tu2.vc_key, d.id_doss from t_dossiers d
+            inner join t_dossier_rights dr on d.id_doss = dr.dossier_id
+            inner join t_virtualcab_users tu2 on tu2.id = dr.VC_USER_ID
+            where  dr.VC_OWNER = 1
+            ) owner on owner.id_doss = tdossiers0_.id_doss 
+            inner join t_users users on users.id = tdossiers0_.id_user_resp 
+            inner join t_virtualcab_users tu on tu.id = dossierrig1_.VC_USER_ID 
+            left join t_dossier_contact as t_dossier_contact on t_dossier_contact.dossier_id = tdossiers0_.id_doss and t_dossier_contact.contact_type_id = 1 
+            left join t_clients as tclients2_ on t_dossier_contact.client_id = tclients2_.id_client 
+            left join t_dossier_contact as t_dossier_contact2 on t_dossier_contact2.dossier_id = tdossiers0_.id_doss and t_dossier_contact2.contact_type_id = 2
+            left join t_clients as tclients3_ on t_dossier_contact2.client_id = tclients3_.id_client
+            left join t_dossier_contact as t_dossier_contact3 on t_dossier_contact3.dossier_id = tdossiers0_.id_doss and t_dossier_contact3.contact_type_id = 3
+            left join t_clients as tclients4_ on t_dossier_contact3.client_id = tclients4_.id_client
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.is_forfait = 1) THEN d.forfait_ht ELSE (( (( (d.dh * 60) + d.dm ) / 60 ) * d.couthoraire ) ) END), 0), 2) cout 
+            from t_timesheet d) xx group by id_doss
+            ) presta on dossierrig1_.DOSSIER_ID=presta.id_doss
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE((d.unit*d.price_per_unit), 0), 2) cout 
+            from t_debour d 
+            ) xx group by id_doss 
+            ) fraisadmin on dossierrig1_.DOSSIER_ID=fraisadmin.id_doss 
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0),2) cout 
+            from t_frais d 
+            join ref_poste poste on poste.id_poste = d.id_poste 
+            join ref_compte compte on compte.id_compte = d.id_compte 
+            and poste.is_frais_collaboration = 1 
+            and compte.account_type_id = 1
+                         ) xx group by id_doss
+                         ) fraisCollaboration on dossierrig1_.DOSSIER_ID=fraisCollaboration.id_doss 
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.id_type = 2) THEN -d.montantht ELSE (d.montantht) END), 0),2) cout 
+            from t_frais d 
+            join ref_poste poste on poste.id_poste = d.id_poste 
+            join ref_compte compte on compte.id_compte = d.id_compte 
+            and poste.is_frais_procedure = 1 
+            and compte.account_type_id = 1
+                         ) xx group by id_doss
+                         ) fraisProcedure on dossierrig1_.DOSSIER_ID=fraisProcedure.id_doss 
+            left join (select id_doss,sum(cout) cout FROM ( 
+            SELECT d.id_doss, round(COALESCE(( CASE WHEN (d.id_type > 1) THEN d.montantht ELSE (-d.montantht) END), 0),2) cout 
+            from t_frais d 
+            join ref_poste poste on poste.id_poste = d.id_poste 
+            join ref_compte compte on compte.id_compte = d.id_compte 
+            and poste.is_honoraires = 1 
+            and compte.account_type_id = 1
+                         ) xx group by id_doss
+                         ) honoraire on dossierrig1_.DOSSIER_ID=honoraire.id_doss 
+            where tu.id_user = $P{userId}  and tu.vc_key = $P{vcKey}
+             AND $X{IN, dossierrig1_.vc_owner, isShareDossier}
+            and (
+            tclients2_.f_prenom like CONCAT('%', $P{searchCriteriaClient}, '%') or tclients2_.f_nom like CONCAT('%', $P{searchCriteriaClient}, '%') 
+            or tclients3_.f_prenom like CONCAT('%', $P{searchCriteriaClient}, '%') or tclients3_.f_nom like CONCAT('%', $P{searchCriteriaClient}, '%') 
+            or tclients4_.f_prenom like CONCAT('%', $P{searchCriteriaClient}, '%') or tclients4_.f_nom like CONCAT('%', $P{searchCriteriaClient}, '%') 
+            )
+              and (tdossiers0_.year_doss like COALESCE(CONCAT('%', $P{searchCriteriaYear}, '%'), '%') and tdossiers0_.num_doss like COALESCE(CONCAT($P{searchCriteriaNumber}, '%'), '%')) 
+            and users.initiales like CONCAT('%', $P{searchCriteriaInitiale}, '%')
+             and (case when $P{searchCriteriaBalance} = 1 then round(ifnull(presta.cout,0), 2)+ ifnull(fraisadmin.cout,0)+ ifnull(fraisProcedure.cout,0)+ ifnull(fraisCollaboration.cout,0) + ifnull(honoraire.cout,0) <> 0 
+            when $P{searchCriteriaBalance} = 0 then round(ifnull(presta.cout,0), 2)+ ifnull(fraisadmin.cout,0)+ ifnull(fraisProcedure.cout,0)+ ifnull(fraisCollaboration.cout,0)+ ifnull(honoraire.cout,0) =0 else 1=1 end)
+             and (case when $P{searchArchived} = 0 then tdossiers0_.date_close is null 
+            when $P{searchArchived} = 1 then tdossiers0_.date_close is not null else 1=1 end) 
+            group by tdossiers0_.id_doss   ,
+                  tdossiers0_.year_doss  ,
+                  tdossiers0_.num_doss   ,
+                  users.initiales,
+                  tclients2_.f_prenom    ,
+                  tclients2_.f_nom       ,
+                  tclients2_.f_company   ,
+                  tclients2_.id_client   ,
+                  tclients3_.f_prenom    ,
+                  tclients3_.f_nom       ,
+                  tclients3_.f_company   ,
+                  tclients3_.id_client   ,
+                  owner.vc_key           ,
+                  tdossiers0_.date_close
+            order by tdossiers0_.year_doss desc, tdossiers0_.num_doss desc
+            limit 100]]>
+        </queryString>
+        <field name="id" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.name" value="id_doss"/>
+            <property name="com.jaspersoft.studio.field.label" value="id"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+        </field>
+        <field name="year" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="year_doss"/>
+            <property name="com.jaspersoft.studio.field.label" value="year"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+        </field>
+        <field name="num" class="java.lang.Integer">
+            <property name="com.jaspersoft.studio.field.name" value="num_doss"/>
+            <property name="com.jaspersoft.studio.field.label" value="num"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+        </field>
+        <field name="initiales" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="initiales"/>
+            <property name="com.jaspersoft.studio.field.label" value="initiales"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_users"/>
+            <fieldDescription><![CDATA[]]></fieldDescription>
+        </field>
+        <field name="firstnameClient" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="f_prenom"/>
+            <property name="com.jaspersoft.studio.field.label" value="firstnameClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="lastnameClient" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="f_nom"/>
+            <property name="com.jaspersoft.studio.field.label" value="lastnameClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="companyClient" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="f_company"/>
+            <property name="com.jaspersoft.studio.field.label" value="companyClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="idClient" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.name" value="id_client"/>
+            <property name="com.jaspersoft.studio.field.label" value="idClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="adverseFirstnameClient" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="f_prenom"/>
+            <property name="com.jaspersoft.studio.field.label" value="adverseFirstnameClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="adverseLastnameClient" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="f_nom"/>
+            <property name="com.jaspersoft.studio.field.label" value="adverseLastnameClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="adverseCompanyClient" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="f_company"/>
+            <property name="com.jaspersoft.studio.field.label" value="adverseCompanyClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="adverseIdClient" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.name" value="id_client"/>
+            <property name="com.jaspersoft.studio.field.label" value="adverseIdClient"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+        </field>
+        <field name="balance" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.name" value="balance"/>
+            <property name="com.jaspersoft.studio.field.label" value="balance"/>
+        </field>
+        <field name="vckeyOwner" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="vc_key"/>
+            <property name="com.jaspersoft.studio.field.label" value="vckeyOwner"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab_users"/>
+        </field>
+        <field name="closeDossier" class="java.sql.Date">
+            <property name="com.jaspersoft.studio.field.name" value="date_close"/>
+            <property name="com.jaspersoft.studio.field.label" value="closeDossier"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+        </field>
+        <field name="type" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.name" value="doss_type"/>
+            <property name="com.jaspersoft.studio.field.label" value="type"/>
+            <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
+        </field>
+    </subDataset>
+    <parameter name="vcKey" class="java.lang.String">
+        <defaultValueExpression><![CDATA["AVOTEST"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="title" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Prestations"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="SUBREPORT_DIR" class="java.lang.String">
+        <defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="currency" class="java.lang.String">
+        <defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="userId" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[96]]></defaultValueExpression>
+    </parameter>
+    <parameter name="numberLbl" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Nombre : "]]></defaultValueExpression>
+    </parameter>
+    <parameter name="costLbl" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA["Cout total: "]]></defaultValueExpression>
+    </parameter>
+    <parameter name="timeLbl" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA["Temps total: "]]></defaultValueExpression>
+    </parameter>
+    <parameter name="isShareDossier" class="java.util.Collection" nestedType="java.lang.Long"/>
+    <parameter name="searchCriteriaYear" class="java.lang.String">
+        <defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaNumber" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaInitiale" class="java.lang.String">
+        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaBalance" class="java.lang.Boolean">
+        <defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchArchived" class="java.lang.Boolean">
+        <defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaClient" class="java.lang.String">
+        <defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+        <![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
+    </queryString>
+    <field name="key" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="key"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="email" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="email"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="name" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="name"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="abbreviation" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="abbreviation"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="alias" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="alias"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="doc_path" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="doc_path"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="user_upd" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="user_upd"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="date_upd" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.label" value="date_upd"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="license_id" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="license_id"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="couthoraire" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="start_invoice_number" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.label" value="start_invoice_number"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="objetsocial" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="objetsocial"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="street" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="street"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="city" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="city"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="cp" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="cp"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="id_country_alpha2" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="id_country_alpha2"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="telephone" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="telephone"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="fax" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="fax"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="website" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="website"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="numentreprise" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="numentreprise"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="logo" class="java.lang.Object">
+        <property name="com.jaspersoft.studio.field.label" value="logo"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="name_admin" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="name_admin"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="email_admin" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="email_admin"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="pass_admin" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="pass_admin"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="temporary_vc" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.label" value="temporary_vc"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="driveType" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="driveType"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="dropbox_token" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="dropbox_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="onedrive_token" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="onedrive_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="refresh_token" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="refresh_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="expire_token" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.label" value="expire_token"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="currency" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="currency"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <pageHeader>
+        <band height="130">
+            <textField>
+                <reportElement x="146" y="40" width="520" height="30" uuid="60d978e9-d572-4ac0-8ee3-5c5ff1a9ccc5"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="22" isBold="true" isUnderline="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+            </textField>
+            <image>
+                <reportElement x="3" y="1" width="120" height="30" uuid="d02eadc2-c353-47e2-bd9e-4a10df30b781"/>
+                <imageExpression><![CDATA[$F{logo}]]></imageExpression>
+            </image>
+            <textField>
+                <reportElement x="2" y="34" width="100" height="20" uuid="72809547-fa30-4bb3-973e-05e09678bf55"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{key}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageHeader>
+    <detail>
+        <band height="340" splitType="Stretch">
+            <componentElement>
+                <reportElement positionType="Float" x="20" y="20" width="772" height="80"
+                               uuid="e61d9fa6-8049-486e-8121-c3dba883fd9b">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+                    <property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+                    <property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                    <datasetRun subDataset="Dataset1" uuid="5d9deb16-91ef-4838-b300-56dcdea18c59">
+                        <datasetParameter name="vcKey">
+                            <datasetParameterExpression><![CDATA[$P{vcKey}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="userId">
+                            <datasetParameterExpression><![CDATA[$P{userId}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="currency">
+                            <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="isShareDossier">
+                            <datasetParameterExpression><![CDATA[$P{isShareDossier}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="searchArchived">
+                            <datasetParameterExpression><![CDATA[$P{searchArchived}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="searchCriteriaClient">
+                            <datasetParameterExpression>
+                                <![CDATA[$P{searchCriteriaClient}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="searchCriteriaYear">
+                            <datasetParameterExpression><![CDATA[$P{searchCriteriaYear}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="searchCriteriaNumber">
+                            <datasetParameterExpression>
+                                <![CDATA[$P{searchCriteriaNumber}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="searchCriteriaInitiale">
+                            <datasetParameterExpression>
+                                <![CDATA[$P{searchCriteriaInitiale}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <datasetParameter name="searchCriteriaBalance">
+                            <datasetParameterExpression>
+                                <![CDATA[$P{searchCriteriaBalance}]]></datasetParameterExpression>
+                        </datasetParameter>
+                        <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                    </datasetRun>
+                    <jr:column width="320" uuid="61c58e99-23f3-45ce-b62b-0f6b664ec330">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                        <jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="320" height="30"
+                                               uuid="5b454061-9b28-4168-a9f0-c360ed58fb07"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="14"/>
+                                </textElement>
+                                <text><![CDATA[Title]]></text>
+                            </staticText>
+                        </jr:tableHeader>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="320" height="30"
+                                               uuid="16077d97-74f4-4611-b8c6-f91565e438c2"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font fontName="SansSerif" size="9"/>
+                                    <paragraph lineSpacingSize="0.5"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{year} +"/"+$F{num} + " " + $F{firstnameClient} +" "+ $F{lastnameClient} + "/"+$F{adverseFirstnameClient} +" "+$F{adverseLastnameClient}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="120" uuid="2a23ad42-148b-442f-be37-afcd1ea70b0a">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                        <jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="120" height="30"
+                                               uuid="f7ecf6b4-f282-40db-8290-323bea1ee3a5"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="14"/>
+                                </textElement>
+                                <text><![CDATA[Description]]></text>
+                            </staticText>
+                        </jr:tableHeader>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="120" height="30"
+                                               uuid="3a647727-1c16-456c-a195-38257ca1302e"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font fontName="SansSerif" size="9"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="67" uuid="197edd4c-7dcb-445a-b697-c214bb3613ae">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="67" height="30"
+                                               uuid="8fdd3ca9-f2a6-4605-a0a9-890ddbd84e85"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="14"/>
+                                </textElement>
+                                <text><![CDATA[Balance]]></text>
+                            </staticText>
+                        </jr:tableHeader>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="67" height="30"
+                                               uuid="5e1a3f1c-4653-4140-9319-199fcccf86c2"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font fontName="SansSerif" size="9"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{balance} != null ? $F{balance}  :"0"]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="183" uuid="37d8fdec-5bcd-418e-be88-0ced74c5788e">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                        <jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="183" height="30"
+                                               uuid="69e5452e-da08-4e7d-a00f-38e4a93d100f"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="14"/>
+                                </textElement>
+                                <text><![CDATA[Date close]]></text>
+                            </staticText>
+                        </jr:tableHeader>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="183" height="30"
+                                               uuid="911c5804-34be-450f-af75-c00ba618c3c7"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font fontName="SansSerif" size="9"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{closeDossier} != null ? new SimpleDateFormat("yyyy-MM-dd").format( $F{closeDossier}) :"NA"]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                </jr:table>
+            </componentElement>
+            <subreport>
+                <reportElement positionType="Float" x="470" y="170" width="300" height="150"
+                               uuid="1f07fbb6-3cc7-45fc-9ef0-ff57d59c8956">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <subreportParameter name="vcKey">
+                    <subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="userId">
+                    <subreportParameterExpression><![CDATA[$P{userId}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="currency">
+                    <subreportParameterExpression><![CDATA[$P{currency}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="numberLbl">
+                    <subreportParameterExpression><![CDATA[$P{numberLbl}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="costLbl">
+                    <subreportParameterExpression><![CDATA[$P{costLbl}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="timeLbl">
+                    <subreportParameterExpression><![CDATA[$P{timeLbl}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="isShareDossier">
+                    <subreportParameterExpression><![CDATA[$P{isShareDossier}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="searchArchived">
+                    <subreportParameterExpression><![CDATA[$P{searchArchived}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="searchCriteriaClient">
+                    <subreportParameterExpression><![CDATA[$P{searchCriteriaClient}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="searchCriteriaYear">
+                    <subreportParameterExpression><![CDATA[$P{searchCriteriaYear}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="searchCriteriaNumber">
+                    <subreportParameterExpression><![CDATA[$P{searchCriteriaNumber}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="searchCriteriaInitiale">
+                    <subreportParameterExpression><![CDATA[$P{searchCriteriaInitiale}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="searchCriteriaBalance">
+                    <subreportParameterExpression><![CDATA[$P{searchCriteriaBalance}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "total.jasper"]]></subreportExpression>
+            </subreport>
+        </band>
+    </detail>
+</jasperReport>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="total" pageWidth="600" pageHeight="150" columnWidth="560" leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20" uuid="c8e58188-afa8-4ef4-8f90-3e9d381aab82">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <parameter name="vcKey" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="userId" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaClient" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaClient}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="numberLbl" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{numberLbl}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="currency" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="tvacLbl" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{tvacLbl}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="htvaLbl" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{htvaLbl}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="tvaLbl" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{tvaLbl}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaYear" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaYear}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaNumber" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaNumber}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="searchCriteriaPoste" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{searchCriteriaPoste}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="startDate" class="java.util.Date">
+        <defaultValueExpression><![CDATA[$P{startDate}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="endDate" class="java.util.Date">
+        <defaultValueExpression><![CDATA[$P{endDate}]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+        <![CDATA[SELECT
+       SUM(if(d.id_type = 1, -d.montant, d.montant)) montant,
+       SUM(if(d.id_type = 1, -d.montantht, d.montantht)) montantht,
+       SUM(if(d.id_type = 1, -d.montant, d.montant)) -  SUM(if(d.id_type = 1, -d.montantht, d.montantht)) tva
+from t_frais d
+         inner join ref_compte compte on compte.id_compte = d.id_compte
+         inner join ref_poste poste on poste.id_poste = d.id_poste
+         inner join ref_transaction trans on trans.id_transaction = d.id_transaction
+         left join t_clients client on client.id_client = d.id_client
+         left join t_dossiers dossier on dossier.id_doss = d.id_doss
+            where d.vc_key = $P{vcKey}
+            and (client.f_nom like concat('%', $P{searchCriteriaClient}, '%')
+            or client.f_prenom like concat('%', $P{searchCriteriaClient}, '%') )
+            and (dossier.year_doss like COALESCE(CONCAT('%', $P{searchCriteriaYear}, '%'), '%') and dossier.num_doss like COALESCE(CONCAT($P{searchCriteriaNumber}, '%'), '%'))
+            and d.id_poste like coalesce($P{searchCriteriaPoste}, '%')
+              and d.date_value between $P{startDate} and $P{endDate}]]>
+    </queryString>
+    <field name="montant" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="montant"/>
+        <property name="com.jaspersoft.studio.field.label" value="montant"/>
+    </field>
+    <field name="montantht" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="montantht"/>
+        <property name="com.jaspersoft.studio.field.label" value="montantht"/>
+    </field>
+    <field name="tva" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="tva"/>
+        <property name="com.jaspersoft.studio.field.label" value="tva"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <summary>
+        <band height="110" splitType="Stretch">
+            <textField>
+                <reportElement x="64" y="0" width="180" height="30" uuid="ab52d572-6fb7-4a29-9121-63330af1ad1f"/>
+                <textElement textAlignment="Right">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$P{tvacLbl} + ($F{montant} != null ? $F{montant} +" "+$P{currency} : 0 +" "+$P{currency} )]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="249" y="0" width="176" height="30" uuid="a4f840a7-aeb6-44d4-b7a0-9fc9b13484f1"/>
+                <textElement textAlignment="Right">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$P{htvaLbl} + ($F{montantht} != null ? $F{montantht}+" "+$P{currency}  : 0+" "+$P{currency} )]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="0" width="60" height="30" uuid="31d37650-bf2a-41a9-8caa-6857e573d29a"/>
+                <textElement textAlignment="Right">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{numberLbl}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="432" y="0" width="120" height="30" uuid="e59dc482-7493-434c-b09e-222a1bfc1e0c"/>
+                <textElement textAlignment="Right">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$P{tvaLbl} + ($F{tva}  != null ? $F{tva}+" "+$P{currency}  : 0+" "+$P{currency} )]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>
