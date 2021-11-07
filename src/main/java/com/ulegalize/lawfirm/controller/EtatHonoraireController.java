@@ -59,8 +59,10 @@ public class EtatHonoraireController {
             parameters.put("vcKey", lawfirmToken.getVcKey());
             parameters.put("userId", lawfirmToken.getUserId().intValue());
             parameters.put("dossierId", dossierId);
-            parameters.put("provLbl", "Sous total avant provisions");
+            parameters.put("provLbl", "Total honoraire HTVA");
+            parameters.put("honorLbl", "Total factures émises HTVA");
             parameters.put("collLbl", "Frais de collaboration");
+            parameters.put("balanceLbl", "Balance dossier (à facturer HTVA)");
             parameters.put("deboursLbl", "Débours");
             parameters.put("prestLbl", "Prestation");
             parameters.put("tvaLbl", "TVA");

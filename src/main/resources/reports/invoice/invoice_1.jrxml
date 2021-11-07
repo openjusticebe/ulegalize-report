@@ -3,8 +3,9 @@
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="invoice_1" pageWidth="595" pageHeight="760" columnWidth="555" leftMargin="20" rightMargin="20"
-              topMargin="20" bottomMargin="20" uuid="7d93021c-f88f-4e80-9aac-5ec6e6016af0">
+              name="invoice_1" pageWidth="595" pageHeight="760" whenNoDataType="NoDataSection" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="7d93021c-f88f-4e80-9aac-5ec6e6016af0">
     <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
     <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
     <property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -326,6 +327,24 @@ sheet.date_action,
     <parameter name="label_invoice_done" class="java.lang.String">
         <defaultValueExpression><![CDATA["Facture acquittée le "]]></defaultValueExpression>
     </parameter>
+    <parameter name="label_dossier" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA["Dossier"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="label_echeance" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA["Échéance"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="lbl_annexe" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Annexe"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="lbl_frais_admin" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Frais"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="lbl_debours" class="java.lang.String">
+        <defaultValueExpression><![CDATA["débours"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="lbl_collab" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Frais Collab."]]></defaultValueExpression>
+    </parameter>
     <queryString language="SQL">
         <![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
     </queryString>
@@ -406,29 +425,29 @@ sheet.date_action,
         <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
     </field>
     <field name="numentreprise" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="numentreprise"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-	</field>
-	<field name="logo" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.label" value="logo"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-	</field>
-	<field name="name_admin" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="name_admin"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-	</field>
-	<field name="email_admin" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="email_admin"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-	</field>
-	<field name="pass_admin" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="pass_admin"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-	</field>
-	<field name="driveType" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="driveType"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
-	</field>
+        <property name="com.jaspersoft.studio.field.label" value="numentreprise"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="logo" class="java.lang.Object">
+        <property name="com.jaspersoft.studio.field.label" value="logo"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="name_admin" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="name_admin"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="email_admin" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="email_admin"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="pass_admin" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="pass_admin"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
+    <field name="driveType" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="driveType"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
+    </field>
     <field name="dropbox_token" class="java.lang.String">
         <property name="com.jaspersoft.studio.field.label" value="dropbox_token"/>
         <property name="com.jaspersoft.studio.field.tree.path" value="t_virtualcab"/>
@@ -469,7 +488,7 @@ sheet.date_action,
         </band>
     </background>
     <title>
-        <band height="559" splitType="Stretch">
+        <band height="486" splitType="Stretch">
             <property name="com.jaspersoft.studio.layout"/>
             <property name="com.jaspersoft.studio.unit.height" value="px"/>
             <textField>
@@ -547,7 +566,8 @@ sheet.date_action,
                 <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "header.jasper"]]></subreportExpression>
             </subreport>
             <subreport>
-                <reportElement x="7" y="223" width="510" height="320" uuid="050317d1-0d7c-471f-ba4b-a53fbb927156">
+                <reportElement x="11" y="223" width="510" height="257" isRemoveLineWhenBlank="true"
+                               uuid="050317d1-0d7c-471f-ba4b-a53fbb927156">
                     <property name="com.jaspersoft.studio.unit.x" value="px"/>
                     <property name="com.jaspersoft.studio.unit.y" value="px"/>
                     <property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -586,158 +606,40 @@ sheet.date_action,
         </band>
     </title>
     <detail>
-        <band height="193" splitType="Stretch">
-            <property name="com.jaspersoft.studio.unit.height" value="px"/>
-            <frame>
-                <reportElement x="0" y="20" width="558" height="120" isRemoveLineWhenBlank="true"
-                               uuid="a21d9046-a171-4dcd-a821-646556789e65">
-                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+        <band height="572" splitType="Stretch">
+            <subreport>
+                <reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false"
+                               x="-7" y="4" width="550" height="556" isPrintWhenDetailOverflows="true"
+                               uuid="35c93951-456f-47e5-b583-fbedb98418a3">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
-                <componentElement>
-                    <reportElement x="0" y="50" width="558" height="80" uuid="baa4a6c7-ddf5-4e5f-93dc-6d4132d2e521">
-                        <property name="com.jaspersoft.studio.layout"
-                                  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-                        <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
-                        <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
-                        <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
-                        <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
-                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                    </reportElement>
-                    <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
-                              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                        <datasetRun subDataset="prestation_ds" uuid="9129bb06-2a21-492b-a2f1-6d631c8de2ab">
-                            <datasetParameter name="id_facture">
-                                <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
-                            </datasetParameter>
-                            <datasetParameter name="currency">
-                                <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
-                            </datasetParameter>
-                            <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                        </datasetRun>
-                        <jr:column width="220" uuid="456e01e4-0f49-4df3-86de-a3cf79c01dcb">
-                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                <staticText>
-                                    <reportElement x="0" y="0" width="220" height="30"
-                                                   uuid="41e63902-ad13-455a-af27-95fbff68b3cb"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
-                                        <font isBold="true"/>
-                                    </textElement>
-                                    <text><![CDATA[Type]]></text>
-                                </staticText>
-                            </jr:tableHeader>
-                            <jr:detailCell style="Table 1_TD" height="30">
-                                <textField>
-                                    <reportElement x="0" y="0" width="220" height="30"
-                                                   uuid="79252ca5-9f37-4596-a30d-3732a7cbef29"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
-                                </textField>
-                            </jr:detailCell>
-                        </jr:column>
-                        <jr:column width="98" uuid="48586746-643d-427d-a52a-c0273cb6c8ea">
-                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                <staticText>
-                                    <reportElement x="0" y="0" width="98" height="30"
-                                                   uuid="f8fca96e-fb13-4cab-a17f-1c2e7c79835b"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
-                                        <font isBold="true"/>
-                                    </textElement>
-                                    <text><![CDATA[Date]]></text>
-                                </staticText>
-                            </jr:tableHeader>
-                            <jr:detailCell style="Table 1_TD" height="30">
-                                <textField pattern="yyyy-MM-dd">
-                                    <reportElement x="0" y="0" width="98" height="30"
-                                                   uuid="cebc272d-d751-45f6-87f9-3459124940aa"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textFieldExpression><![CDATA[$F{date_action}]]></textFieldExpression>
-                                </textField>
-                            </jr:detailCell>
-                        </jr:column>
-                        <jr:column width="83" uuid="ac855224-a1cb-4136-969d-fa02f6f0f440">
-                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                <staticText>
-                                    <reportElement x="0" y="0" width="83" height="30"
-                                                   uuid="1852dcb9-2d99-4f6e-a99a-9b16e54b8809"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
-                                        <font isBold="true"/>
-                                    </textElement>
-                                    <text><![CDATA[HTVA]]></text>
-                                </staticText>
-                            </jr:tableHeader>
-                            <jr:detailCell style="Table 1_TD" height="30">
-                                <textField>
-                                    <reportElement x="0" y="0" width="83" height="30"
-                                                   uuid="cf76d05e-96a7-4e0c-b546-93da064f4c45"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textFieldExpression>
-                                        <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout_htva})+" "+$P{currency}]]></textFieldExpression>
-                                </textField>
-                            </jr:detailCell>
-                        </jr:column>
-                        <jr:column width="74" uuid="ba8b75ce-4158-4801-8e65-d946cdef59b0">
-                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
-                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                <staticText>
-                                    <reportElement x="0" y="0" width="74" height="30"
-                                                   uuid="1ac04ee2-39d7-436c-a8ef-6c06c1a02455"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
-                                        <font isBold="true"/>
-                                    </textElement>
-                                    <text><![CDATA[ttc]]></text>
-                                </staticText>
-                            </jr:tableHeader>
-                            <jr:detailCell style="Table 1_TD" height="30">
-                                <textField>
-                                    <reportElement x="0" y="0" width="74" height="30"
-                                                   uuid="609f62c0-587a-4fd8-8245-c0dc455599b2"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textFieldExpression><![CDATA[$F{tva} +"%"]]></textFieldExpression>
-                                </textField>
-                            </jr:detailCell>
-                        </jr:column>
-                        <jr:column width="83" uuid="1a34010c-c5e3-4d04-8a6e-ec83976f357a">
-                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
-                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                <staticText>
-                                    <reportElement x="0" y="0" width="83" height="30"
-                                                   uuid="15cfd471-8a94-4dd2-8373-efbdce096043"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
-                                        <font isBold="true"/>
-                                    </textElement>
-                                    <text><![CDATA[TVAC]]></text>
-                                </staticText>
-                            </jr:tableHeader>
-                            <jr:detailCell style="Table 1_TD" height="30">
-                                <textField>
-                                    <reportElement x="0" y="0" width="83" height="30"
-                                                   uuid="1b078ed1-5105-4e4e-90dc-1aff51f82761"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textFieldExpression>
-                                        <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout})+" "+$P{currency}]]></textFieldExpression>
-                                </textField>
-                            </jr:detailCell>
-                        </jr:column>
-                    </jr:table>
-                </componentElement>
-                <textField>
-                    <reportElement x="3" y="0" width="157" height="30" uuid="b54e3a89-9fbc-4730-9135-a097f3e4ea25">
-                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
-                    </reportElement>
-                    <textElement>
-                        <font size="14" isBold="true"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$P{label_prestation}]]></textFieldExpression>
-                </textField>
-            </frame>
+                <subreportParameter name="label_prestation">
+                    <subreportParameterExpression><![CDATA[$P{label_prestation}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="lbl_annexe">
+                    <subreportParameterExpression><![CDATA[$P{lbl_annexe}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="lbl_frais_admin">
+                    <subreportParameterExpression><![CDATA[$P{lbl_frais_admin}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="lbl_debours">
+                    <subreportParameterExpression><![CDATA[$P{lbl_debours}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="lbl_collab">
+                    <subreportParameterExpression><![CDATA[$P{lbl_collab}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="vcKey">
+                    <subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="id_facture">
+                    <subreportParameterExpression><![CDATA[$P{id_facture}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="currency">
+                    <subreportParameterExpression><![CDATA[$P{currency}]]></subreportParameterExpression>
+                </subreportParameter>
+                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "annexes.jasper"]]></subreportExpression>
+            </subreport>
         </band>
     </detail>
     <pageFooter>

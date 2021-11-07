@@ -11,8 +11,9 @@ change `gradle.properties` version
 commit your change add a new tag and push all
 
 ```
-git tag 1.4.7  
-git push origin 1.4.7
+git tag 1.6.0
+git push origin 1.6.0
+
 ```
 
 #### DEV
@@ -39,29 +40,33 @@ docker stop debian_ulegalize-reports_1
 docker rm debian_ulegalize-reports_1  
 docker rmi $(docker images finauxa/ulegalize-reports -q)    
 docker-compose up -d
+
 ```
 
+`
+docker rmi debian_ulegalize-reports_1:1.4.9  
+`
 ##### Environment
 
 #### prod
 
 `
-docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.4.7 --spring.profiles.active=prod --server.use-forward-headers=true
+docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.6.0 --spring.profiles.active=prod --server.use-forward-headers=true
 `
 `
-docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.4.7 --spring.profiles.active=prod --server.use-forward-headers=true
+docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.6.0 --spring.profiles.active=prod --server.use-forward-headers=true
 `
 
 #### test
 
 `
-docker run --name ulegalize-reports --net="host" --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.4.7 --spring.profiles.active=test --server.use-forward-headers=true
+docker run --name ulegalize-reports --net="host" --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.6.0 --spring.profiles.active=test --server.use-forward-headers=true
 `
 
 #### dev
 
 `
-docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.4.7 --spring.profiles.active=devDocker --server.use-forward-headers=true
+docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.6.0 --spring.profiles.active=devDocker --server.use-forward-headers=true
 `
 
 ## more info

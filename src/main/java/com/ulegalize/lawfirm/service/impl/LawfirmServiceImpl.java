@@ -62,6 +62,10 @@ public class LawfirmServiceImpl implements LawfirmService {
             parameters.put("label_dossier", "Affaire");
             parameters.put("label_echeance", "Échéance");
             parameters.put("label_ref", "Nos références");
+            parameters.put("lbl_annexe", "Annexes");
+            parameters.put("lbl_frais_admin", "Frais Admin.");
+            parameters.put("lbl_debours", "Débours");
+            parameters.put("lbl_collab", "Frais Collab.");
             parameters.put("SUBREPORT_DIR", reportPath);
 
             Connection connection = dataSource.getConnection();

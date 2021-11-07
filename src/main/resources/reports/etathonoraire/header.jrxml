@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			  xmlns="http://jasperreports.sourceforge.net/jasperreports"
-			  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-			  name="header" pageWidth="595" pageHeight="470" columnWidth="555" leftMargin="20" rightMargin="20"
-			  topMargin="0" bottomMargin="0" uuid="72e96e15-5978-4b1e-a418-1b3f9b87e1b1">
-	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="header" pageWidth="595" pageHeight="470" columnWidth="555" leftMargin="20" rightMargin="20"
+              topMargin="0" bottomMargin="0" uuid="72e96e15-5978-4b1e-a418-1b3f9b87e1b1">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="dossierId" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
@@ -54,11 +54,13 @@ from t_dossiers b
          left join t_title on t_title.id_title=a.id_title
          inner join t_users tusers on tusers.id = b.id_user_resp
          left join t_countries on t_countries.alpha3=a.id_country_alpha3
-,(select t_dossier_contact3.dossier_id, group_concat(t_clients3.f_nom) f_nom_party from  t_dossier_contact t_dossier_contact3
-                                left join t_clients t_clients3 on t_clients3.id_client=t_dossier_contact3.client_id
-  where (t_dossier_contact3.dossier_id = $P{dossierId} and t_dossier_contact3.contact_type_id = 3)
-    group by t_dossier_contact3.dossier_id
-) t_clients3_bis
+    left join (
+       select t_dossier_contact3.dossier_id, group_concat(t_clients3.f_nom) f_nom_party
+   from  t_dossier_contact t_dossier_contact3
+       left join t_clients t_clients3 on t_clients3.id_client=t_dossier_contact3.client_id
+     where (t_dossier_contact3.dossier_id = 5641 and t_dossier_contact3.contact_type_id = 3)
+     group by t_dossier_contact3.dossier_id
+) t_clients3_bis on t_clients3_bis.dossier_id = b.id_doss
      WHERE b.id_doss= $P{dossierId}
      AND vcu.vc_key=$P{vcKey}
      AND vcu.id_user=$P{userId}]]>
@@ -271,55 +273,55 @@ from t_dossiers b
 				</box>
 				<textField>
 					<reportElement x="272" y="2" width="200" height="30" uuid="3f5842a5-93a0-489a-9808-7e61c2880102"/>
-					<textFieldExpression>
-						<![CDATA[$F{f_company}  != null && $F{f_company}  != "" ? $F{f_company}  : ""]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[$F{f_company}  != null && $F{f_company}  != "" ? $F{f_company}  : ""]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="272" y="32" width="248" height="21" uuid="492de3c7-39d7-44b1-93a0-7333008f8a70">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<textFieldExpression>
-						<![CDATA[$F{doss_type}.equals("MD") ? $F{f_nom_party} : $F{title} + " " + $F{f_prenom} + " " + $F{f_nom}]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[$F{doss_type}.equals("MD") ? $F{f_nom_party} : $F{title} + " " + $F{f_prenom} + " " + $F{f_nom}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="272" y="51" width="200" height="21" uuid="0b889202-de93-4af7-a754-2cc799d61c18"/>
-					<textFieldExpression>
-						<![CDATA[!$F{doss_type}.equals("MD") ? $F{f_rue} + " " + $F{f_num} : ""]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[!$F{doss_type}.equals("MD") ? $F{f_rue} + " " + $F{f_num} : ""]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="272" y="73" width="200" height="21" uuid="ef9536cb-25fb-4e15-9978-75d2abb60975">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<textFieldExpression>
-						<![CDATA[!$F{doss_type}.equals("MD") ? $F{f_cp} + " " + $F{f_ville} : ""]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[!$F{doss_type}.equals("MD") ? $F{f_cp} + " " + $F{f_ville} : ""]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="272" y="93" width="200" height="21" uuid="4e5c75f3-5387-49ea-8bf0-42b3d014246f">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<textFieldExpression>
-						<![CDATA[!$F{doss_type}.equals("MD") ? $F{nom_fr_fr} : ""]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[!$F{doss_type}.equals("MD") ? $F{nom_fr_fr} : ""]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="310" y="114" width="162" height="30" uuid="ca1df6fa-b930-40e1-bfa6-10c35746c66d"/>
-					<textFieldExpression>
-						<![CDATA[$F{f_tva} != null && $F{f_tva} != "" ? $F{f_tva}  : ""]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[$F{f_tva} != null && $F{f_tva} != "" ? $F{f_tva}  : ""]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="272" y="144" width="200" height="30" uuid="9b83ede7-d77e-48fc-b7ec-0989a6d90109"/>
-					<textFieldExpression>
-						<![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
 				</textField>
 			</frame>
 			<textField>
 				<reportElement x="0" y="220" width="300" height="30" uuid="94c0a236-3a2d-43e7-9c94-20a201e0d839"/>
-				<textFieldExpression>
-					<![CDATA[$P{concerne} +  " " + (!$F{doss_type}.equals("MD") ? $F{f_nom_cab} + " / " + $F{f_nom_adv} : $F{f_nom_party})]]></textFieldExpression>
+                <textFieldExpression>
+                    <![CDATA[$P{concerne} +  " " + (!$F{doss_type}.equals("MD") ? $F{f_nom_cab} + " / " + $F{f_nom_adv} : $F{f_nom_party})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="250" width="300" height="30" uuid="94c04880-aaec-42f2-85f1-5fa70c3d2245"/>
-				<textFieldExpression>
-					<![CDATA[$P{ourRef} + $F{_Dossier_Annee} + " / " + $F{_Dossier_Numero} + " / " + $F{initiales}]]></textFieldExpression>
+                <textFieldExpression>
+                    <![CDATA[$P{ourRef} + $F{_Dossier_Annee} + " / " + $F{_Dossier_Numero} + " / " + $F{initiales}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

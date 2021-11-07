@@ -91,7 +91,6 @@ public class DossierController {
 
             return ResponseEntity
                     .ok()
-//                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body((fileResponse))

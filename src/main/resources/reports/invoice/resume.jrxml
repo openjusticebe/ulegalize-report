@@ -104,7 +104,7 @@ WHERE
         <defaultValueExpression><![CDATA["Le montant total à payer"]]></defaultValueExpression>
     </parameter>
     <parameter name="currency" class="java.lang.String">
-        <defaultValueExpression><![CDATA["€"]]></defaultValueExpression>
+        <defaultValueExpression><![CDATA[$P{currency}]]></defaultValueExpression>
     </parameter>
     <parameter name="id_facture" class="java.lang.Integer">
         <parameterDescription><![CDATA[3281]]></parameterDescription>
@@ -142,15 +142,17 @@ WHERE
         <property name="com.jaspersoft.studio.field.label" value="echeance"/>
     </field>
     <title>
-        <band height="290" splitType="Stretch">
+        <band height="283" splitType="Stretch">
             <property name="com.jaspersoft.studio.unit.height" value="px"/>
             <frame>
-                <reportElement x="0" y="0" width="510" height="230" uuid="3ebdc7ca-e1fa-4a26-ba56-2288be4b76aa">
+                <reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="510" height="270"
+                               uuid="3ebdc7ca-e1fa-4a26-ba56-2288be4b76aa">
                     <property name="com.jaspersoft.studio.unit.width" value="px"/>
                     <property name="com.jaspersoft.studio.layout"/>
                 </reportElement>
                 <subreport>
-                    <reportElement x="0" y="129" width="510" height="38" uuid="c7ac0f62-90b7-4ece-a0ec-f70150deeff0">
+                    <reportElement positionType="Float" x="0" y="129" width="510" height="38"
+                                   uuid="c7ac0f62-90b7-4ece-a0ec-f70150deeff0">
                         <property name="com.jaspersoft.studio.unit.height" value="px"/>
                     </reportElement>
                     <subreportParameter name="currency">
@@ -166,13 +168,15 @@ WHERE
                     <subreportExpression><![CDATA[$P{SUBREPORT_DIR} +"htva.jasper"]]></subreportExpression>
                 </subreport>
                 <line>
-                    <reportElement x="0" y="222" width="510" height="1" uuid="e4b01fdf-e28b-49fe-b04b-9bbfbae1f9db">
+                    <reportElement positionType="FixRelativeToBottom" x="0" y="202" width="510" height="1"
+                                   uuid="e4b01fdf-e28b-49fe-b04b-9bbfbae1f9db">
                         <property name="com.jaspersoft.studio.unit.height" value="px"/>
                         <property name="com.jaspersoft.studio.unit.width" value="px"/>
                     </reportElement>
                 </line>
-                <subreport>
-                    <reportElement x="0" y="225" width="510" height="40" uuid="bb7074f1-7fb3-42b8-bedb-4cd9637c7423">
+                <subreport overflowType="NoStretch">
+                    <reportElement positionType="FixRelativeToBottom" x="0" y="214" width="510" height="40"
+                                   isRemoveLineWhenBlank="true" uuid="bb7074f1-7fb3-42b8-bedb-4cd9637c7423">
                         <property name="com.jaspersoft.studio.unit.width" value="px"/>
                         <property name="com.jaspersoft.studio.unit.height" value="px"/>
                     </reportElement>
@@ -189,7 +193,8 @@ WHERE
                     <subreportExpression><![CDATA[$P{SUBREPORT_DIR} +"total.jasper"]]></subreportExpression>
                 </subreport>
                 <componentElement>
-                    <reportElement x="0" y="164" width="510" height="20" uuid="1733a1ac-50a9-44e9-9d32-360fe29803a5">
+                    <reportElement positionType="Float" x="0" y="164" width="510" height="20"
+                                   uuid="1733a1ac-50a9-44e9-9d32-360fe29803a5">
                         <property name="com.jaspersoft.studio.unit.CONTENTS.height" value="px"/>
                         <property name="com.jaspersoft.studio.unit.height" value="px"/>
                         <property name="com.jaspersoft.studio.unit.x" value="px"/>
