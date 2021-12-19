@@ -7,10 +7,8 @@ import com.ulegalize.enumeration.EnumRefCurrency;
 import com.ulegalize.lawfirm.EntityTest;
 import com.ulegalize.lawfirm.model.LawfirmToken;
 import com.ulegalize.lawfirm.service.LawfirmService;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvoiceControllerTests extends EntityTest {
     @Autowired
     LawfirmService lawfirmService;
@@ -47,7 +44,7 @@ public class InvoiceControllerTests extends EntityTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setupAuthenticate() {
         LawfirmToken lawfirmToken = new LawfirmToken(1L, USER, "mail@me.com", "NEWCAB", null, true, new ArrayList<>(), "", false, EnumLanguage.FR.getShortCode(), EnumRefCurrency.EUR.getSymbol(), "", DriveType.openstack, "");
 

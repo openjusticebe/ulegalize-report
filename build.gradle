@@ -1,8 +1,7 @@
 plugins {
     id 'java'
-    id 'maven-publish'
-    id 'org.springframework.boot' version '2.3.5.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id "org.springframework.boot" version "2.6.1"
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id "org.sonarqube" version "3.0"
 }
 apply from: 'version.gradle'
@@ -15,7 +14,6 @@ dependencyManagement {
 }
 group = 'com.ulegalize'
 project.version = applicationVersion
-//version = applicationVersion
 description = 'ulegalize-reports'
 sourceCompatibility = '1.11'
 repositories {
@@ -23,7 +21,11 @@ repositories {
     maven {
         url = uri('https://repo1.maven.org/maven2/')
     }
-//    maven{url "http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/"}
+    maven { url "https://jasperreports.sourceforge.net/maven2/" }
+    maven { url "https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/" }
+    maven {
+        url "https://jaspersoft.jfrog.io/ui/native/third-party-ce-artifacts/"
+    }
 }
 springBoot {
     buildInfo()
@@ -35,11 +37,11 @@ dependencies {
     }
 
     // loggin stuff
-    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    compile 'net.logstash.logback:logstash-logback-encoder:6.6'
-    compile 'ch.qos.logback:logback-core:1.2.3'
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'ch.qos.logback:logback-access:1.2.3'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.6'
+    implementation "ch.qos.logback:logback-core:${logBackVersion}"
+    implementation "ch.qos.logback:logback-classic:${logBackVersion}"
+    implementation "ch.qos.logback:logback-access:${logBackVersion}"
 
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
@@ -48,13 +50,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 
     testImplementation "org.springframework.security:spring-security-test:${springSecurity}"
-    implementation "com.fasterxml.jackson.core:jackson-core:${jackson}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jackson}"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:${jackson}"
-    implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jackson}"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jackson}"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jackson}"
-    runtime group: 'com.fasterxml.jackson.module', name: 'jackson-modules-java8', version: "${jackson}"
+
+    runtimeOnly group: 'com.fasterxml.jackson.module', name: 'jackson-modules-java8', version: "${jackson}"
 
     implementation "com.ulegalize:ulegalizeshare:${ulegalizeShare}"
 
@@ -67,27 +64,20 @@ dependencies {
     implementation "org.apache.commons:commons-lang3:${commonsLang}"
     implementation "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauth}"
 
-    implementation "io.jsonwebtoken:jjwt-api:${jsonwebtoken}"
-    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jsonwebtoken}"
-    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jsonwebtoken}"
     implementation "mysql:mysql-connector-java:${mysqlConnector}"
 
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwt
-    compile group: 'com.auth0', name: 'java-jwt', version: "${auth0JwtVersion}"
+    implementation group: 'com.auth0', name: 'java-jwt', version: "${auth0JwtVersion}"
     implementation group: 'com.auth0', name: 'auth0', version: "${auth0Version}"
-    implementation 'com.auth0:jwks-rsa:0.13.0'
+    implementation "com.auth0:jwks-rsa:${auth0JwksVersion}"
 
-    implementation "net.sf.jasperreports:jasperreports:${jasperVersion}"
-    implementation "com.lowagie:itext:${itextVersion}"
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
+    implementation("net.sf.jasperreports:jasperreports:${jasperVersion}") {
+//        exclude group: 'com.lowagie', module: 'itext'
     }
+    // https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts
+    implementation group: 'net.sf.jasperreports', name: 'jasperreports-fonts', version: "${jasperVersion}"
+
 }
 
 tasks.withType(JavaCompile) {

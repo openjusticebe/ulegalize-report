@@ -64,6 +64,7 @@ public class PrestationController {
 
     @GetMapping(path = "/dossier/{dossierId}")
     public ResponseEntity<Resource> reportPrestationListByDossier(@PathVariable Integer dossierId,
+                                                                  @RequestParam(required = false) Integer responsableId,
                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDate) {
         LawfirmToken lawfirmToken = (LawfirmToken) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -72,7 +73,7 @@ public class PrestationController {
 
         InputStream jasperfile = this.getClass().getClassLoader().getResourceAsStream(reportPath + "prestation_list_dossier.jasper");
 
-        ByteArrayResource fileResponse = generatereportPrestationByDossier(startDate, endDate, reportPath, jasperfile, dossierId);
+        ByteArrayResource fileResponse = generatereportPrestationByDossier(startDate, endDate, reportPath, jasperfile, dossierId, responsableId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=prestation_list_dossier.pdf");
@@ -90,8 +91,8 @@ public class PrestationController {
         return generatereportPrestation(isShareVcKey, startDate, endDate, reportPath, jasperfile, null, responsibleId, clientId);
     }
 
-    private ByteArrayResource generatereportPrestationByDossier(ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer dossierId) {
-        return generatereportPrestation(false, startDate, endDate, reportPath, jasperfile, dossierId, null, null);
+    private ByteArrayResource generatereportPrestationByDossier(ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer dossierId, Integer responsableId) {
+        return generatereportPrestation(false, startDate, endDate, reportPath, jasperfile, dossierId, responsableId, null);
     }
 
     private ByteArrayResource generatereportPrestation(boolean isShareVcKey, ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer dossierId, Integer responsibleId, Integer clientId) {

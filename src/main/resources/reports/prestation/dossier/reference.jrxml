@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
@@ -25,16 +25,21 @@
     </parameter>
     <queryString language="SQL">
         <![CDATA[select td.year_doss, lpad(td.num_doss,4,'0') num_doss,
-       tclients2_.f_prenom, tclients2_.f_nom,
-       tclients2_.f_rue, tclients2_.f_num, tclients2_.f_cp, tclients2_.f_ville,
-       tclients3_.f_prenom adversePrenom, tclients3_.f_nom adverseNom,
-    tclients4_.f_prenom partie_name, tclients4_.f_nom partie_firstname,
-    t_dossier_contact.contact_type_id
+       tcc.f_prenom, tcc.f_nom,
+       tcc.f_rue, tcc.f_num, tcc.f_cp, tcc.f_ville,
+       coalesce(tpa.f_prenom, '') adversePrenom, coalesce(tpa.f_nom, '') adverseNom,
+       coalesce(tclients4_.f_prenom,'') partie_name, coalesce(tclients4_.f_nom,'') partie_firstname,
+       t_dossier_contact.contact_type_id
 from t_dossiers td
-         left join t_dossier_contact as t_dossier_contact on t_dossier_contact.dossier_id = td.id_doss
-         left join t_clients as tclients2_ on t_dossier_contact.client_id = tclients2_.id_client and t_dossier_contact.contact_type_id = 1
-         left join t_clients as tclients3_ on t_dossier_contact.client_id = tclients3_.id_client and t_dossier_contact.contact_type_id = 2
-         left join t_clients as tclients4_ on t_dossier_contact.client_id = tclients4_.id_client and t_dossier_contact.contact_type_id = 3
+         left join t_dossier_contact as t_dossier_contact
+                   on t_dossier_contact.dossier_id = td.id_doss and t_dossier_contact.contact_type_id = 1
+         left join t_clients as tcc on t_dossier_contact.client_id = tcc.id_client
+         left join t_dossier_contact as t_dossier_contact2
+                   on t_dossier_contact2.dossier_id = td.id_doss and t_dossier_contact2.contact_type_id = 2
+         left join t_clients as tpa on t_dossier_contact2.client_id = tpa.id_client
+         left join t_dossier_contact as t_dossier_contact3
+                   on t_dossier_contact3.dossier_id = td.id_doss and t_dossier_contact3.contact_type_id = 3
+         left join t_clients as tclients4_ on t_dossier_contact3.client_id = tclients4_.id_client
 where td.id_doss = $P{dossierId}
 GROUP BY  td.year_doss, td.num_doss]]>
     </queryString>

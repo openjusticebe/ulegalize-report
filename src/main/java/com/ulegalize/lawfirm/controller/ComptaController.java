@@ -79,7 +79,7 @@ public class ComptaController {
             parameters.put("searchCriteriaClient", searchCriteriaClient != null ? searchCriteriaClient : "");
             parameters.put("searchCriteriaYear", searchCriteriaYear);
             parameters.put("searchCriteriaNumber", searchCriteriaNumber != null ? searchCriteriaNumber.intValue() : null);
-            parameters.put("searchCriteriaPoste", searchCriteriaPoste);
+            parameters.put("searchCriteriaPoste", searchCriteriaPoste != null && !searchCriteriaPoste.isEmpty() ? searchCriteriaPoste : null);
             parameters.put("startDate", CalendarEventsUtil.convertToDateViaInstant(startDate));
             parameters.put("endDate", CalendarEventsUtil.convertToDateViaInstant(endDate));
             parameters.put("SUBREPORT_DIR", reportPath);

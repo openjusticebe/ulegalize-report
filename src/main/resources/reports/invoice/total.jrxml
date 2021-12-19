@@ -53,6 +53,6 @@ group by id_facture]]>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{total_ttc}+" " +$P{currency}]]></textFieldExpression>
             </textField>
-		</band>
-	</title>
+        </band>
+    </title>
 </jasperReport>

@@ -43,16 +43,16 @@ and f.id_facture_type=ft.id_facture_type
 	<field name="id_client" class="java.lang.Long">
         <property name="com.jaspersoft.studio.field.name" value="id_client"/>
 		<property name="com.jaspersoft.studio.field.label" value="id_client"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
-	</field>
-	<field name="f_tva" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+    </field>
+    <field name="f_tva" class="java.lang.String">
         <property name="com.jaspersoft.studio.field.name" value="f_tva"/>
-		<property name="com.jaspersoft.studio.field.label" value="f_tva"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
-	</field>
-	<field name="nom_fr_fr" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="f_tva"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
+    </field>
+    <field name="nom_fr_fr" class="java.lang.String">
         <property name="com.jaspersoft.studio.field.name" value="nom_fr_fr"/>
-		<property name="com.jaspersoft.studio.field.label" value="nom_fr_fr"/>
+        <property name="com.jaspersoft.studio.field.label" value="nom_fr_fr"/>
         <property name="com.jaspersoft.studio.field.tree.path" value="t_countries"/>
     </field>
     <field name="feche" class="java.lang.String">

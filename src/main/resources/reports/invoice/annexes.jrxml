@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="annexes" pageWidth="595" pageHeight="550" columnWidth="555" leftMargin="20" rightMargin="20"
+              name="annexes" pageWidth="550" pageHeight="550" columnWidth="550" leftMargin="0" rightMargin="0"
               topMargin="0" bottomMargin="0" uuid="51f5e4cf-488d-4580-a0b9-e21e9be84b1c">
     <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
     <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
@@ -226,14 +226,14 @@ and poste.is_frais_procedure = 1]]>
         </parameter>
         <queryString language="SQL">
             <![CDATA[select poste.ref_poste poste,
-       concat(client.f_nom, ' ', client.f_prenom) tiers,
+       concat(coalesce(client.f_nom, ''), ' ', coalesce(client.f_prenom, '')) tiers,
        sheet.montantht,
        sheet.tva,
        sheet.montant
 from t_frais sheet
          inner join ref_poste poste on poste.id_poste = sheet.id_poste
          left join t_clients client on client.id_client = sheet.id_client
-         INNER JOIN t_facture_frais_debours ft ON ft.FRAIS_ID = sheet.id_frais
+         INNER JOIN t_facture_frais_collaboration ft ON ft.FRAIS_ID = sheet.id_frais
 where  ft.FACTURE_ID = $P{id_facture}
 and poste.is_frais_collaboration = 1]]>
         </queryString>
@@ -343,644 +343,615 @@ from (
     <background>
         <band splitType="Stretch"/>
     </background>
-    <title>
+    <detail>
         <band height="550">
             <property name="com.jaspersoft.studio.unit.height" value="px"/>
             <frame>
-                <reportElement positionType="Float" x="0" y="0" width="561" height="490"
-                               uuid="679e4b4e-d35f-4636-a55f-9ceec38ed2a5">
-                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                <reportElement x="0" y="9" width="550" height="528" isRemoveLineWhenBlank="true"
+                               uuid="4eb4e0fa-0853-4292-b90a-f2740fbeba8f">
+                    <printWhenExpression>
+                        <![CDATA[$F{ts_nb} > 0 || $F{fraisadm_nb} > 0 || $F{debours_nb} > 0 || $F{colla_nb} > 0]]></printWhenExpression>
                 </reportElement>
-                <frame>
-                    <reportElement x="-2" y="44" width="554" height="130" isRemoveLineWhenBlank="true"
-                                   uuid="2236c72e-7ac2-4804-add1-0fd7d069ad7c">
+                <textField>
+                    <reportElement x="10" y="37" width="157" height="30" isRemoveLineWhenBlank="true"
+                                   uuid="dc640267-bd02-45b9-816f-6252775acdad">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
                         <printWhenExpression><![CDATA[$F{ts_nb} > 0]]></printWhenExpression>
                     </reportElement>
-                    <componentElement>
-                        <reportElement x="10" y="37" width="540" height="80"
-                                       uuid="c89c4f3d-8141-4803-b0cc-2b727f6a4444">
-                            <property name="com.jaspersoft.studio.layout"
-                                      value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-                            <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
-                            <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
-                            <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
-                            <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
-                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                        </reportElement>
-                        <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
-                                  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                            <datasetRun subDataset="prestation_ds" uuid="ab551fa6-4e82-4035-b0c6-9e7a6d076f53">
-                                <datasetParameter name="id_facture">
-                                    <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <datasetParameter name="currency">
-                                    <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                            </datasetRun>
-                            <jr:column width="214" uuid="18832325-7bc2-4cad-90bd-b0e8b84027d7">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column1"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="214" height="30"
-                                                       uuid="b9782607-50a1-498b-9a7a-d84c73a49d8d"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Type]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="214" height="30"
-                                                       uuid="48bd0f0a-f3a5-4ebc-9992-0deaff178a7a"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="96" uuid="3e723a92-7552-449d-97fa-b2fab0a4c90c">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column2"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="96" height="30"
-                                                       uuid="2718ee40-01e6-4b49-8fd4-63e727173eb3"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Date]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField pattern="yyyy-MM-dd">
-                                        <reportElement x="0" y="0" width="96" height="30"
-                                                       uuid="04a7abff-9367-42e1-8ee7-f9cafc5baea7"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{date_action}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="80" uuid="0d1fd58d-50d2-4c48-b954-48902c7b283a">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column3"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="80" height="30"
-                                                       uuid="58af59ef-ab84-4fc1-83b6-be04614ed183"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[HTVA]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="80" height="30"
-                                                       uuid="c97bea5c-e54d-42bb-beed-1bbc4c794ebd"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression>
-                                            <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout_htva})+" "+$P{currency}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="71" uuid="042043ed-ae22-40ca-b618-1007eafef3e9">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column4"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="71" height="30"
-                                                       uuid="3326dfa9-d213-4dcd-b211-dbbd5b146adb"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[ttc]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="71" height="30"
-                                                       uuid="ab8866da-0575-4cff-a35d-e6b193670967"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{tva} +"%"]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="79" uuid="5c5fa22f-84bd-460e-9cdd-9e502c083c97">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column5"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="79" height="30"
-                                                       uuid="665c69c5-1e6b-460b-b401-a99655974556"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[TVAC]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="79" height="30"
-                                                       uuid="fb553525-97ee-4641-abb5-a7719043b5fd"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression>
-                                            <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout})+" "+$P{currency}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                        </jr:table>
-                    </componentElement>
-                    <textField>
-                        <reportElement x="10" y="7" width="157" height="30" uuid="dc640267-bd02-45b9-816f-6252775acdad">
-                            <property name="com.jaspersoft.studio.unit.y" value="px"/>
-                        </reportElement>
-                        <textElement>
-                            <font size="14" isBold="true"/>
-                        </textElement>
-                        <textFieldExpression><![CDATA[$P{label_prestation}]]></textFieldExpression>
-                    </textField>
-                </frame>
+                    <textElement>
+                        <font size="14" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{label_prestation}]]></textFieldExpression>
+                </textField>
+                <componentElement>
+                    <reportElement x="7" y="67" width="540" height="80" isRemoveLineWhenBlank="true"
+                                   uuid="c89c4f3d-8141-4803-b0cc-2b727f6a4444">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                        <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+                        <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+                        <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+                        <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <printWhenExpression><![CDATA[$F{ts_nb} > 0]]></printWhenExpression>
+                    </reportElement>
+                    <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                        <datasetRun subDataset="prestation_ds" uuid="ab551fa6-4e82-4035-b0c6-9e7a6d076f53">
+                            <datasetParameter name="id_facture">
+                                <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="currency">
+                                <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                        </datasetRun>
+                        <jr:column width="214" uuid="18832325-7bc2-4cad-90bd-b0e8b84027d7">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="214" height="30"
+                                                   uuid="b9782607-50a1-498b-9a7a-d84c73a49d8d"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Type]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="214" height="30"
+                                                   uuid="48bd0f0a-f3a5-4ebc-9992-0deaff178a7a"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="96" uuid="3e723a92-7552-449d-97fa-b2fab0a4c90c">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="96" height="30"
+                                                   uuid="2718ee40-01e6-4b49-8fd4-63e727173eb3"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Date]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField pattern="yyyy-MM-dd">
+                                    <reportElement x="0" y="0" width="96" height="30"
+                                                   uuid="04a7abff-9367-42e1-8ee7-f9cafc5baea7"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{date_action}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="80" uuid="0d1fd58d-50d2-4c48-b954-48902c7b283a">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="80" height="30"
+                                                   uuid="58af59ef-ab84-4fc1-83b6-be04614ed183"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[HTVA]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="80" height="30"
+                                                   uuid="c97bea5c-e54d-42bb-beed-1bbc4c794ebd"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression>
+                                        <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout_htva})+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="71" uuid="042043ed-ae22-40ca-b618-1007eafef3e9">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="71" height="30"
+                                                   uuid="3326dfa9-d213-4dcd-b211-dbbd5b146adb"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[ttc]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="71" height="30"
+                                                   uuid="ab8866da-0575-4cff-a35d-e6b193670967"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{tva} +"%"]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="79" uuid="5c5fa22f-84bd-460e-9cdd-9e502c083c97">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="79" height="30"
+                                                   uuid="665c69c5-1e6b-460b-b401-a99655974556"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[TVAC]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="79" height="30"
+                                                   uuid="fb553525-97ee-4641-abb5-a7719043b5fd"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression>
+                                        <![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{cout})+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                    </jr:table>
+                </componentElement>
+                <componentElement>
+                    <reportElement positionType="Float" x="4" y="190" width="546" height="80"
+                                   isRemoveLineWhenBlank="true" uuid="2397e4cb-48dc-4315-91d2-c432ef436cda">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                        <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+                        <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+                        <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+                        <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <printWhenExpression><![CDATA[$F{fraisadm_nb} > 0]]></printWhenExpression>
+                    </reportElement>
+                    <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                        <datasetRun subDataset="ds_frais_admin" uuid="d70d9b9d-0732-45df-bf0e-f8b526e4483d">
+                            <datasetParameter name="id_facture">
+                                <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="currency">
+                                <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                        </datasetRun>
+                        <jr:column width="216" uuid="93630150-436e-4990-8f8e-e81d1e5851b9">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="216" height="30"
+                                                   uuid="7ebc55f7-b3b5-4a86-8812-eb834d5fa71d"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Type]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="216" height="30"
+                                                   uuid="f8c6392b-97a3-49a6-b495-2f6828845c9c"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="97" uuid="a1f8b8b1-3bf2-4696-8718-5926abb592fc">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="97" height="30"
+                                                   uuid="06e5e79d-f2aa-4fc4-a146-bd106f2da6d9"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Mesure]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField pattern="yyyy-MM-dd">
+                                    <reportElement x="0" y="0" width="97" height="30"
+                                                   uuid="1a139c39-e68e-4f2c-bafb-22843242a153"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{mesure}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="81" uuid="96d9e02b-834b-4b70-9ab8-6738d6f32341">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="81" height="30"
+                                                   uuid="76f380bf-23a4-43fb-a465-7c65c4e3f31b"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Prix]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="81" height="30"
+                                                   uuid="bc568e1f-290f-40ff-9057-d33f7c245e47"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{price} + " "+ $P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="72" uuid="836a2724-3319-4e1f-841d-fdce37f0fac3">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="72" height="30"
+                                                   uuid="9d86299c-bb41-4349-bcf8-af2bc23c4a5a"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Prix unit.]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="72" height="30"
+                                                   uuid="f54a02e8-781d-4b91-bcda-ee9af4fb9050"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{price_per_unit}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="80" uuid="646735b3-f957-4b49-8c2e-2219dee47e13">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="80" height="30"
+                                                   uuid="6179ef48-4e26-442a-bf39-614cc797b856"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Unit.]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="80" height="30"
+                                                   uuid="70589af5-438c-469f-9e1d-03c971acedd3"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                    </jr:table>
+                </componentElement>
                 <textField>
-                    <reportElement x="-1" y="2" width="157" height="30" uuid="53dad98c-b80d-4f45-a130-737df7d4966f">
+                    <reportElement positionType="Float" x="10" y="270" width="157" height="30"
+                                   isRemoveLineWhenBlank="true" uuid="91377c79-6c8c-4244-962f-6b9383d739dc">
                         <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                        <printWhenExpression><![CDATA[$F{debours_nb} > 0]]></printWhenExpression>
+                    </reportElement>
+                    <textElement>
+                        <font size="14" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{lbl_debours}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="10" y="153" width="157" height="30"
+                                   isRemoveLineWhenBlank="true" uuid="c7016124-b4d3-40d8-9454-36444394eda9">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                        <printWhenExpression><![CDATA[$F{fraisadm_nb} > 0]]></printWhenExpression>
+                    </reportElement>
+                    <textElement>
+                        <font size="14" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{lbl_frais_admin}]]></textFieldExpression>
+                </textField>
+                <componentElement>
+                    <reportElement positionType="Float" x="4" y="300" width="542" height="80"
+                                   isRemoveLineWhenBlank="true" uuid="3fb40314-848a-4b8f-998a-0a04d49a3600">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                        <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+                        <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+                        <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+                        <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <printWhenExpression><![CDATA[$F{debours_nb} > 0]]></printWhenExpression>
+                    </reportElement>
+                    <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                        <datasetRun subDataset="ds_debours" uuid="3623e822-0daf-4eda-a741-363a08cbcb37">
+                            <datasetParameter name="id_facture">
+                                <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="currency">
+                                <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                        </datasetRun>
+                        <jr:column width="231" uuid="06bbf73a-5769-4a30-83e8-57f6bcfddcf1">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="231" height="30"
+                                                   uuid="69949dd5-bc12-492a-a453-efdaa47a1f9a"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Poste]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="231" height="30"
+                                                   uuid="40dc2110-6450-4ce8-8ea8-c969c2473ba7"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{poste}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="104" uuid="136e1280-7d84-443e-8bd8-91aa9b180fac">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="104" height="30"
+                                                   uuid="0a062fd9-8fc2-4ce6-8624-0c89b3a74b98"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Tiers]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField pattern="yyyy-MM-dd">
+                                    <reportElement x="0" y="0" width="104" height="30"
+                                                   uuid="9ef85624-0e33-4a97-9b17-f8ab4ec25258"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{tiers}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="87" uuid="1b5bf5e5-aec4-4b4e-9181-ee8a1f0fe647">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="87" height="30"
+                                                   uuid="4bab8b2c-8b4f-4d37-8f77-d2b5fa9d90a8"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[HTVA]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="87" height="30"
+                                                   uuid="5ff658d1-96b6-46b6-b640-3c73b85ec55e"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression>
+                                        <![CDATA[$F{montantht}+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="36" uuid="abeb12f7-5f10-47a8-b1c4-1144ff209f34">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="36" height="30"
+                                                   uuid="1ead74a1-6fe6-45f7-aff9-e7db2eeba38d"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[tva]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="36" height="30"
+                                                   uuid="42abe89f-e855-4778-8350-3d28d86f3f0e"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{tva} + "%"]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="84" uuid="567786d3-988d-43c7-83b6-7287cef0bb6f">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="84" height="30"
+                                                   uuid="987f45ac-f5a4-4c88-8c69-b8c866aba88b"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[TVAC]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="84" height="30"
+                                                   uuid="53f9765d-1ac9-4679-aa53-3f4f929f0bd5"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{montant}+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                    </jr:table>
+                </componentElement>
+                <textField>
+                    <reportElement positionType="Float" x="10" y="385" width="157" height="30"
+                                   isRemoveLineWhenBlank="true" uuid="3e7d287c-07c7-42ef-aa45-a8399589821a">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                        <printWhenExpression><![CDATA[$F{colla_nb} > 0]]></printWhenExpression>
+                    </reportElement>
+                    <textElement>
+                        <font size="14" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{lbl_collab}]]></textFieldExpression>
+                </textField>
+                <componentElement>
+                    <reportElement positionType="Float" x="4" y="420" width="537" height="80"
+                                   isRemoveLineWhenBlank="true" uuid="12afea95-d0db-4984-a3db-787868c5b0a8">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                        <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+                        <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+                        <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+                        <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <printWhenExpression><![CDATA[$F{colla_nb} > 0]]></printWhenExpression>
+                    </reportElement>
+                    <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                        <datasetRun subDataset="ds_frais_colla" uuid="460af9a2-39c4-423f-8923-21973c81f6ad">
+                            <datasetParameter name="id_facture">
+                                <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="currency">
+                                <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                        </datasetRun>
+                        <jr:column width="229" uuid="07750a14-961e-4de1-a47d-7d8948cd4fbb">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="229" height="30"
+                                                   uuid="8baa6784-dd8d-4df7-a189-6a1f598ba623"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Poste]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="229" height="30"
+                                                   uuid="c99b75fb-64ba-4610-b3a5-8dd9f4be1a4c"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{poste}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="103" uuid="db747d33-391f-45d6-a3c1-04d2da7c9873">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="103" height="30"
+                                                   uuid="207f999b-b61b-4e88-b6b8-5b2f8fa3a116"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[Tiers]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField pattern="yyyy-MM-dd">
+                                    <reportElement x="0" y="0" width="103" height="30"
+                                                   uuid="c03b8dfe-5809-4bb1-b6dd-0ff56ad8f59e"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{tiers}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="86" uuid="43dd8bd0-2578-409c-a941-cf95fbcaf6ce">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="86" height="30"
+                                                   uuid="1e556ba5-ef4d-46f1-882b-530313329fd3"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[HTVA]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="86" height="30"
+                                                   uuid="9d0bc7d1-5d90-4ebb-ad10-d4c30b23b2b8"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression>
+                                        <![CDATA[$F{montantht}+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="36" uuid="dedb913f-a078-4571-ac07-8da647172e72">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="36" height="30"
+                                                   uuid="02a3e1ac-b5ab-4f0b-9b11-33237e8e76be"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[tva]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="36" height="30"
+                                                   uuid="79d8e3bd-5891-46eb-b3f0-d3710438c624"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{tva} + "%"]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                        <jr:column width="83" uuid="ddfc9a3d-fc3a-424b-ada5-55aed74ff4e1">
+                            <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                            <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
+                                <staticText>
+                                    <reportElement x="0" y="0" width="83" height="30"
+                                                   uuid="ea121f5e-109e-49f9-a287-4ec71f9b7d7c"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textElement>
+                                        <font isBold="true"/>
+                                    </textElement>
+                                    <text><![CDATA[TVAC]]></text>
+                                </staticText>
+                            </jr:tableHeader>
+                            <jr:detailCell style="Table 1_TD" height="30">
+                                <textField>
+                                    <reportElement x="0" y="0" width="83" height="30"
+                                                   uuid="57875318-908b-4bd1-b7d0-4fadefb4df6c"/>
+                                    <box topPadding="5" leftPadding="5"/>
+                                    <textFieldExpression><![CDATA[$F{montant}+" "+$P{currency}]]></textFieldExpression>
+                                </textField>
+                            </jr:detailCell>
+                        </jr:column>
+                    </jr:table>
+                </componentElement>
+                <textField>
+                    <reportElement x="10" y="2" width="157" height="30" uuid="53dad98c-b80d-4f45-a130-737df7d4966f">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                        <printWhenExpression>
+                            <![CDATA[$F{ts_nb} > 0 || $F{fraisadm_nb} > 0 || $F{debours_nb} > 0 || $F{colla_nb} > 0]]></printWhenExpression>
                     </reportElement>
                     <textElement>
                         <font size="16" isBold="true" isUnderline="true"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$P{lbl_annexe}]]></textFieldExpression>
                 </textField>
-                <frame>
-                    <reportElement positionType="Float" x="-2" y="180" width="550" height="141"
-                                   isRemoveLineWhenBlank="true" uuid="d4dd51ad-a4fe-481f-82f1-b3d4a647f1cb">
-                        <printWhenExpression><![CDATA[$F{fraisadm_nb} > 0]]></printWhenExpression>
-                    </reportElement>
-                    <componentElement>
-                        <reportElement x="4" y="39" width="546" height="80" uuid="2397e4cb-48dc-4315-91d2-c432ef436cda">
-                            <property name="com.jaspersoft.studio.layout"
-                                      value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-                            <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
-                            <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
-                            <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
-                            <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
-                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                        </reportElement>
-                        <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
-                                  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                            <datasetRun subDataset="ds_frais_admin" uuid="d70d9b9d-0732-45df-bf0e-f8b526e4483d">
-                                <datasetParameter name="id_facture">
-                                    <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <datasetParameter name="currency">
-                                    <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                            </datasetRun>
-                            <jr:column width="216" uuid="93630150-436e-4990-8f8e-e81d1e5851b9">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column1"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="216" height="30"
-                                                       uuid="7ebc55f7-b3b5-4a86-8812-eb834d5fa71d"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Type]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="216" height="30"
-                                                       uuid="f8c6392b-97a3-49a6-b495-2f6828845c9c"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="97" uuid="a1f8b8b1-3bf2-4696-8718-5926abb592fc">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column2"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="97" height="30"
-                                                       uuid="06e5e79d-f2aa-4fc4-a146-bd106f2da6d9"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Mesure]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField pattern="yyyy-MM-dd">
-                                        <reportElement x="0" y="0" width="97" height="30"
-                                                       uuid="1a139c39-e68e-4f2c-bafb-22843242a153"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{mesure}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="81" uuid="96d9e02b-834b-4b70-9ab8-6738d6f32341">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column3"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="81" height="30"
-                                                       uuid="76f380bf-23a4-43fb-a465-7c65c4e3f31b"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Prix]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="81" height="30"
-                                                       uuid="bc568e1f-290f-40ff-9057-d33f7c245e47"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression>
-                                            <![CDATA[$F{price} + " "+ $P{currency}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="72" uuid="836a2724-3319-4e1f-841d-fdce37f0fac3">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column4"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="72" height="30"
-                                                       uuid="9d86299c-bb41-4349-bcf8-af2bc23c4a5a"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Prix unit.]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="72" height="30"
-                                                       uuid="f54a02e8-781d-4b91-bcda-ee9af4fb9050"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{price_per_unit}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="80" uuid="646735b3-f957-4b49-8c2e-2219dee47e13">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column5"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="80" height="30"
-                                                       uuid="6179ef48-4e26-442a-bf39-614cc797b856"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Unit.]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="80" height="30"
-                                                       uuid="70589af5-438c-469f-9e1d-03c971acedd3"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                        </jr:table>
-                    </componentElement>
-                    <textField>
-                        <reportElement x="4" y="7" width="157" height="30" uuid="c7016124-b4d3-40d8-9454-36444394eda9">
-                            <property name="com.jaspersoft.studio.unit.y" value="px"/>
-                        </reportElement>
-                        <textElement>
-                            <font size="14" isBold="true"/>
-                        </textElement>
-                        <textFieldExpression><![CDATA[$P{lbl_frais_admin}]]></textFieldExpression>
-                    </textField>
-                </frame>
-                <frame>
-                    <reportElement positionType="Float" x="-1" y="323" width="550" height="136"
-                                   isRemoveLineWhenBlank="true" uuid="e8246e60-893e-40b3-942c-127776ecffd5">
-                        <printWhenExpression><![CDATA[$F{debours_nb} > 0]]></printWhenExpression>
-                    </reportElement>
-                    <componentElement>
-                        <reportElement x="4" y="40" width="542" height="80" uuid="3fb40314-848a-4b8f-998a-0a04d49a3600">
-                            <property name="com.jaspersoft.studio.layout"
-                                      value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-                            <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
-                            <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
-                            <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
-                            <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
-                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                        </reportElement>
-                        <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
-                                  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                            <datasetRun subDataset="ds_debours" uuid="3623e822-0daf-4eda-a741-363a08cbcb37">
-                                <datasetParameter name="id_facture">
-                                    <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <datasetParameter name="currency">
-                                    <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                            </datasetRun>
-                            <jr:column width="231" uuid="06bbf73a-5769-4a30-83e8-57f6bcfddcf1">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column1"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="231" height="30"
-                                                       uuid="69949dd5-bc12-492a-a453-efdaa47a1f9a"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Poste]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="231" height="30"
-                                                       uuid="40dc2110-6450-4ce8-8ea8-c969c2473ba7"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{poste}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="104" uuid="136e1280-7d84-443e-8bd8-91aa9b180fac">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column2"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="104" height="30"
-                                                       uuid="0a062fd9-8fc2-4ce6-8624-0c89b3a74b98"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Tiers]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField pattern="yyyy-MM-dd">
-                                        <reportElement x="0" y="0" width="104" height="30"
-                                                       uuid="9ef85624-0e33-4a97-9b17-f8ab4ec25258"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{tiers}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="87" uuid="1b5bf5e5-aec4-4b4e-9181-ee8a1f0fe647">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column3"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="87" height="30"
-                                                       uuid="4bab8b2c-8b4f-4d37-8f77-d2b5fa9d90a8"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[HTVA]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="87" height="30"
-                                                       uuid="5ff658d1-96b6-46b6-b640-3c73b85ec55e"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression>
-                                            <![CDATA[$F{montantht}+" "+$P{currency}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="36" uuid="abeb12f7-5f10-47a8-b1c4-1144ff209f34">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column4"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="36" height="30"
-                                                       uuid="1ead74a1-6fe6-45f7-aff9-e7db2eeba38d"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[tva]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="36" height="30"
-                                                       uuid="42abe89f-e855-4778-8350-3d28d86f3f0e"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{tva} + "%"]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="84" uuid="567786d3-988d-43c7-83b6-7287cef0bb6f">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column5"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="84" height="30"
-                                                       uuid="987f45ac-f5a4-4c88-8c69-b8c866aba88b"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[TVAC]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="84" height="30"
-                                                       uuid="53f9765d-1ac9-4679-aa53-3f4f929f0bd5"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression>
-                                            <![CDATA[$F{montant}+" "+$P{currency}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                        </jr:table>
-                    </componentElement>
-                    <textField>
-                        <reportElement x="4" y="7" width="157" height="30" uuid="91377c79-6c8c-4244-962f-6b9383d739dc">
-                            <property name="com.jaspersoft.studio.unit.y" value="px"/>
-                        </reportElement>
-                        <textElement>
-                            <font size="14" isBold="true"/>
-                        </textElement>
-                        <textFieldExpression><![CDATA[$P{lbl_debours}]]></textFieldExpression>
-                    </textField>
-                </frame>
-                <frame>
-                    <reportElement positionType="Float" x="-4" y="468" width="550" height="141"
-                                   isRemoveLineWhenBlank="true" uuid="8bb9b6ae-c610-4888-9fb8-cad0b438d45a">
-                        <printWhenExpression><![CDATA[$F{colla_nb} > 0]]></printWhenExpression>
-                    </reportElement>
-                    <textField>
-                        <reportElement x="6" y="1" width="157" height="30" uuid="3e7d287c-07c7-42ef-aa45-a8399589821a">
-                            <property name="com.jaspersoft.studio.unit.y" value="px"/>
-                        </reportElement>
-                        <textElement>
-                            <font size="14" isBold="true"/>
-                        </textElement>
-                        <textFieldExpression><![CDATA[$P{lbl_collab}]]></textFieldExpression>
-                    </textField>
-                    <componentElement>
-                        <reportElement x="9" y="61" width="537" height="80" uuid="12afea95-d0db-4984-a3db-787868c5b0a8">
-                            <property name="com.jaspersoft.studio.layout"
-                                      value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-                            <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
-                            <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
-                            <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
-                            <property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
-                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                        </reportElement>
-                        <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
-                                  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                            <datasetRun subDataset="ds_frais_colla" uuid="460af9a2-39c4-423f-8923-21973c81f6ad">
-                                <datasetParameter name="id_facture">
-                                    <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <datasetParameter name="currency">
-                                    <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
-                                </datasetParameter>
-                                <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                            </datasetRun>
-                            <jr:column width="229" uuid="07750a14-961e-4de1-a47d-7d8948cd4fbb">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column1"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="229" height="30"
-                                                       uuid="8baa6784-dd8d-4df7-a189-6a1f598ba623"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Poste]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="229" height="30"
-                                                       uuid="c99b75fb-64ba-4610-b3a5-8dd9f4be1a4c"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{poste}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="103" uuid="db747d33-391f-45d6-a3c1-04d2da7c9873">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column2"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="103" height="30"
-                                                       uuid="207f999b-b61b-4e88-b6b8-5b2f8fa3a116"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[Tiers]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField pattern="yyyy-MM-dd">
-                                        <reportElement x="0" y="0" width="103" height="30"
-                                                       uuid="c03b8dfe-5809-4bb1-b6dd-0ff56ad8f59e"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{tiers}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="86" uuid="43dd8bd0-2578-409c-a941-cf95fbcaf6ce">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column3"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="86" height="30"
-                                                       uuid="1e556ba5-ef4d-46f1-882b-530313329fd3"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[HTVA]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="86" height="30"
-                                                       uuid="9d0bc7d1-5d90-4ebb-ad10-d4c30b23b2b8"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression>
-                                            <![CDATA[$F{montantht}+" "+$P{currency}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="36" uuid="dedb913f-a078-4571-ac07-8da647172e72">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column4"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="36" height="30"
-                                                       uuid="02a3e1ac-b5ab-4f0b-9b11-33237e8e76be"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[tva]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="36" height="30"
-                                                       uuid="79d8e3bd-5891-46eb-b3f0-d3710438c624"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression><![CDATA[$F{tva} + "%"]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                            <jr:column width="83" uuid="ddfc9a3d-fc3a-424b-ada5-55aed74ff4e1">
-                                <property name="com.jaspersoft.studio.components.table.model.column.name"
-                                          value="Column5"/>
-                                <jr:tableHeader style="Table 1_TH" height="30" rowSpan="1">
-                                    <staticText>
-                                        <reportElement x="0" y="0" width="83" height="30"
-                                                       uuid="ea121f5e-109e-49f9-a287-4ec71f9b7d7c"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textElement>
-                                            <font isBold="true"/>
-                                        </textElement>
-                                        <text><![CDATA[TVAC]]></text>
-                                    </staticText>
-                                </jr:tableHeader>
-                                <jr:detailCell style="Table 1_TD" height="30">
-                                    <textField>
-                                        <reportElement x="0" y="0" width="83" height="30"
-                                                       uuid="57875318-908b-4bd1-b7d0-4fadefb4df6c"/>
-                                        <box topPadding="5" leftPadding="5"/>
-                                        <textFieldExpression>
-                                            <![CDATA[$F{montant}+" "+$P{currency}]]></textFieldExpression>
-                                    </textField>
-                                </jr:detailCell>
-                            </jr:column>
-                        </jr:table>
-                    </componentElement>
-                </frame>
             </frame>
         </band>
-    </title>
+    </detail>
 </jasperReport>

@@ -43,9 +43,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private LawfirmV2Api lawfirmV2Api;
 
-    @Autowired
-    private JWTUtil jwtUtil;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
