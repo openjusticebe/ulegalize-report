@@ -1,9 +1,7 @@
 package com.ulegalize.lawfirm.service;
 
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.web.server.ResponseStatusException;
+import com.ulegalize.dto.LawfirmDTO;
 
 public interface LawfirmService {
-    public ByteArrayResource getInvoiceReport(Integer id) throws ResponseStatusException;
-
+    LawfirmDTO getLawfirmByVcKey(String vcKey);
 }

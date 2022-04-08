@@ -11,8 +11,8 @@ change `gradle.properties` version
 commit your change add a new tag and push all
 
 ```
-git tag 1.7.0
-git push origin 1.7.0
+git tag 2.0.3
+git push origin 2.0.3
 
 ```
 
@@ -51,22 +51,22 @@ docker rmi debian_ulegalize-reports_1:1.4.9
 #### prod
 
 `
-docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.7.0 --spring.profiles.active=prod --server.use-forward-headers=true
+docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:2.0.3 --spring.profiles.active=prod --server.use-forward-headers=true
 `
 `
-docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.7.0 --spring.profiles.active=prod --server.use-forward-headers=true
+docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:2.0.3 --spring.profiles.active=prod --server.use-forward-headers=true
 `
 
 #### test
 
 `
-docker run --name ulegalize-reports --net="host" --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.7.0 --spring.profiles.active=test --server.use-forward-headers=true
+docker run --name ulegalize-reports --net="host" --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:2.0.3 --spring.profiles.active=test --server.use-forward-headers=true
 `
 
 #### dev
 
 `
-docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:1.7.0 --spring.profiles.active=devDocker --server.use-forward-headers=true
+docker run --name ulegalize-reports --restart always -p 127.0.0.1:5555:5555 -it finauxa/ulegalize-reports:2.0.3 --spring.profiles.active=devDocker --server.use-forward-headers=true
 `
 
 ## more info
@@ -78,15 +78,15 @@ https://ulegalize.atlassian.net/l/c/AY0FkzHX
 build the app
 
 ```
-docker build -t finauxa/ulegalize-reports:1.7.0 .  
-docker push finauxa/ulegalize-reports:1.7.0  
+docker build -t finauxa/ulegalize-reports:2.0.3 .  
+docker push finauxa/ulegalize-reports:2.0.3  
 ```
 
 ```
 docker stop ulegalize-reports   
 docker rm ulegalize-reports  
 docker rmi $(docker images finauxa/ulegalize-reports -q)  
-docker pull finauxa/ulegalize-reports:1.7.0  
+docker pull finauxa/ulegalize-reports:2.0.3  
 ```
 
 ## mysql 5.6

@@ -1,8 +1,11 @@
 package com.ulegalize.lawfirm.controller;
 
+import com.ulegalize.enumeration.EnumLanguage;
 import com.ulegalize.enumeration.EnumVCOwner;
 import com.ulegalize.lawfirm.model.LawfirmToken;
-import com.ulegalize.lawfirm.service.LawfirmService;
+import com.ulegalize.lawfirm.model.enumeration.EnumTranslate;
+import com.ulegalize.lawfirm.service.InvoiceService;
+import com.ulegalize.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -30,13 +33,14 @@ import java.util.*;
 @Slf4j
 public class DossierController {
     @Autowired
-    LawfirmService lawfirmService;
+    InvoiceService invoiceService;
 
     @Autowired
     private DataSource dataSource;
 
     @GetMapping
     public ResponseEntity<Resource> reportDossierList(@RequestParam(required = false) String vcKey,
+                                                      @RequestParam(required = false) String language,
                                                       @RequestParam(required = false) String searchCriteriaClient,
                                                       @RequestParam(required = false) String searchCriteriaYear,
                                                       @RequestParam(required = false) Long searchCriteriaNumber,
@@ -57,15 +61,36 @@ public class DossierController {
             // load the precompiled .jasper files
             JasperReport mainJasperReport = (JasperReport) JRLoader.loadObject(jasperfile);
 
+            EnumLanguage enumLanguage = EnumLanguage.FR;
+            if (language != null) {
+                enumLanguage = EnumLanguage.fromshortCode(language);
+            }
+
             JasperFillManager fillmgr = JasperFillManager.getInstance(ctx);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("currency", lawfirmToken.getSymbolCurrency());
             parameters.put("vcKey", lawfirmToken.getVcKey());
             parameters.put("userId", lawfirmToken.getUserId().intValue());
-            parameters.put("title", "Liste de Dossiers");
-            parameters.put("numberLbl", "Nombre: ");
-            parameters.put("costLbl", "Cout total: ");
-            parameters.put("timeLbl", "Temps total: ");
+            parameters.put("title", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_010.getLabelFr(),
+                    EnumTranslate.M_010.getLabelEn(),
+                    EnumTranslate.M_010.getLabelNl(),
+                    EnumTranslate.M_010.getLabelDe()));
+            parameters.put("numberLbl", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_011.getLabelFr(),
+                    EnumTranslate.M_011.getLabelEn(),
+                    EnumTranslate.M_011.getLabelNl(),
+                    EnumTranslate.M_011.getLabelDe()));
+            parameters.put("costLbl", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_007.getLabelFr(),
+                    EnumTranslate.M_007.getLabelEn(),
+                    EnumTranslate.M_007.getLabelNl(),
+                    EnumTranslate.M_007.getLabelDe()));
+            parameters.put("timeLbl", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_008.getLabelFr(),
+                    EnumTranslate.M_008.getLabelEn(),
+                    EnumTranslate.M_008.getLabelNl(),
+                    EnumTranslate.M_008.getLabelDe()));
             List<Integer> vckeyShare = new ArrayList<>();
             vckeyShare.add(EnumVCOwner.OWNER_VC.getId());
             vckeyShare.add(EnumVCOwner.NOT_OWNER_VC.getId());

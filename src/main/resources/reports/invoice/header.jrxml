@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="header" pageWidth="350" pageHeight="300" columnWidth="310" leftMargin="20" rightMargin="20"
-              topMargin="20" bottomMargin="20" uuid="dd419cb9-c09d-4a56-9d47-1c65f4d6221f">
-    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+              name="header" pageWidth="350" pageHeight="300" whenNoDataType="AllSectionsNoDetail" columnWidth="310"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="dd419cb9-c09d-4a56-9d47-1c65f4d6221f">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
     <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
     <property name="com.jaspersoft.studio.unit." value="pixel"/>
     <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -16,149 +17,55 @@
     <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
     <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
     <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-    <parameter name="factureId" class="java.lang.Integer">
+    <parameter name="factureId" class="java.lang.Integer" isForPrompting="false">
         <defaultValueExpression><![CDATA[$P{factureId}]]></defaultValueExpression>
     </parameter>
     <parameter name="vcKey" class="java.lang.String"/>
+    <parameter name="label_ref" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="label_dossier" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="lbl_date" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="label_echeance" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{label_echeance}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="typeLabel" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{typeLabel}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="vat" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{vat}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="countryLabel" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{countryLabel}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="reference" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{reference}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="yearFacture" class="java.lang.Integer" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{yearFacture}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="numFacture" class="java.lang.Integer" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{numFacture}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="dateValue" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{dateValue}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="dateEcheance" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{dateEcheance}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="dossierLabel" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{dossierLabel}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="street" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{street}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="clientFullName" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{clientFullName}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="city" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{city}]]></defaultValueExpression>
+    </parameter>
     <queryString language="SQL">
-        <![CDATA[select b.id_client,b.f_tva,t_countries.nom_fr_fr,
-if(f.id_echeance=2,tfech.description,f.date_echeance) feche,if(b.client_type=2,b.f_company,concat(a.title,' ',b.f_prenom,' ',b.f_nom)) cl,f.id_echeance,f.facture_ref, ft.description, ft.acronyme,f.montant,f.year_facture,f.is_valid,f.num_facture,d.id_doss,d.couthoraire,d.success_fee_perc,d.success_fee_montant,f.id_facture,f.id_facture_type,DATE_FORMAT(f.date_echeance, '%d/%m/%Y') facture_date_echeance,DATE_FORMAT(f.date_value, '%d/%m/%Y') facture_date_value,d.year_doss,lpad(d.num_doss,4,'0') ndo,
-	b.f_rue,concat(b.f_cp,' ',b.f_ville) ville 
-	from t_factures f 
-	LEFT JOIN (
-		select tdoss.id_doss,tdoss.year_doss,tdoss.num_doss,
-		tdoss.couthoraire,tdoss.success_fee_perc,
-		tdoss.success_fee_montant
-		from t_dossiers tdoss
-	) d on d.id_doss=f.id_doss
-	,t_clients b,t_title a,t_facture_type ft,t_facture_echeance tfech,t_countries 
-	where f.id_facture=$P{factureId}
-	and f.vc_key=$P{vcKey}
-and f.id_tiers=b.id_client 
-AND b.id_title=a.id_title 
-and f.id_facture_type=ft.id_facture_type
- and f.id_echeance=tfech.id 
- and t_countries.alpha3=b.id_country_alpha3]]>
-	</queryString>
-	<field name="id_client" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id_client"/>
-		<property name="com.jaspersoft.studio.field.label" value="id_client"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
-    </field>
-    <field name="f_tva" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="f_tva"/>
-        <property name="com.jaspersoft.studio.field.label" value="f_tva"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
-    </field>
-    <field name="nom_fr_fr" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="nom_fr_fr"/>
-        <property name="com.jaspersoft.studio.field.label" value="nom_fr_fr"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_countries"/>
-    </field>
-    <field name="feche" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="feche"/>
-        <property name="com.jaspersoft.studio.field.label" value="feche"/>
-    </field>
-    <field name="cl" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="cl"/>
-        <property name="com.jaspersoft.studio.field.label" value="cl"/>
-    </field>
-    <field name="id_echeance" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="id_echeance"/>
-        <property name="com.jaspersoft.studio.field.label" value="id_echeance"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="facture_ref" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="facture_ref"/>
-        <property name="com.jaspersoft.studio.field.label" value="facture_ref"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="description" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="description"/>
-        <property name="com.jaspersoft.studio.field.label" value="description"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_type"/>
-    </field>
-    <field name="acronyme" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="acronyme"/>
-        <property name="com.jaspersoft.studio.field.label" value="acronyme"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_facture_type"/>
-    </field>
-    <field name="montant" class="java.math.BigDecimal">
-        <property name="com.jaspersoft.studio.field.name" value="montant"/>
-        <property name="com.jaspersoft.studio.field.label" value="montant"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="year_facture" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="year_facture"/>
-        <property name="com.jaspersoft.studio.field.label" value="year_facture"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="is_valid" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="is_valid"/>
-        <property name="com.jaspersoft.studio.field.label" value="is_valid"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="num_facture" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="num_facture"/>
-        <property name="com.jaspersoft.studio.field.label" value="num_facture"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="id_doss" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id_doss"/>
-        <property name="com.jaspersoft.studio.field.label" value="id_doss"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
-    </field>
-    <field name="couthoraire" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="couthoraire"/>
-        <property name="com.jaspersoft.studio.field.label" value="couthoraire"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
-    </field>
-    <field name="success_fee_perc" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="success_fee_perc"/>
-        <property name="com.jaspersoft.studio.field.label" value="success_fee_perc"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
-    </field>
-    <field name="success_fee_montant" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="success_fee_montant"/>
-        <property name="com.jaspersoft.studio.field.label" value="success_fee_montant"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
-    </field>
-    <field name="id_facture" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id_facture"/>
-        <property name="com.jaspersoft.studio.field.label" value="id_facture"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="id_facture_type" class="java.lang.Integer">
-        <property name="com.jaspersoft.studio.field.name" value="id_facture_type"/>
-        <property name="com.jaspersoft.studio.field.label" value="id_facture_type"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_factures"/>
-    </field>
-    <field name="facture_date_echeance" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="facture_date_echeance"/>
-        <property name="com.jaspersoft.studio.field.label" value="facture_date_echeance"/>
-    </field>
-    <field name="facture_date_value" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="facture_date_value"/>
-        <property name="com.jaspersoft.studio.field.label" value="facture_date_value"/>
-    </field>
-    <field name="year_doss" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="year_doss"/>
-        <property name="com.jaspersoft.studio.field.label" value="year_doss"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_dossiers"/>
-    </field>
-    <field name="ndo" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="ndo"/>
-        <property name="com.jaspersoft.studio.field.label" value="ndo"/>
-    </field>
-    <field name="f_rue" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="f_rue"/>
-        <property name="com.jaspersoft.studio.field.label" value="f_rue"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="t_clients"/>
-    </field>
-    <field name="ville" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="ville"/>
-        <property name="com.jaspersoft.studio.field.label" value="ville"/>
-    </field>
+        <![CDATA[]]>
+    </queryString>
     <title>
         <band height="220">
             <property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -174,75 +81,60 @@ and f.id_facture_type=ft.id_facture_type
                     <pen lineWidth="0.0"/>
                 </box>
                 <textField>
-                    <reportElement x="182" y="0" width="100" height="20" uuid="39216bef-2c55-4ad2-93f9-23be40b0dc61"/>
+                    <reportElement x="200" y="0" width="90" height="20" uuid="39216bef-2c55-4ad2-93f9-23be40b0dc61">
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    </reportElement>
                     <textElement textAlignment="Right">
-                        <font size="11" isBold="true"/>
+                        <font size="10" isBold="true"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{facture_ref}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{reference}]]></textFieldExpression>
                 </textField>
-                <staticText>
-                    <reportElement x="68" y="-1" width="111" height="19" uuid="5964dbef-1bda-4ac5-9da3-d81eff29a886"/>
-                    <textElement textAlignment="Right">
-                        <font size="11" isBold="true"/>
-                    </textElement>
-                    <text><![CDATA[Nos references: ]]></text>
-                </staticText>
-                <staticText>
-                    <reportElement x="70" y="18" width="111" height="19" uuid="a2e8b86f-219f-446c-974c-806030dc68af"/>
-                    <textElement textAlignment="Right">
-                        <font size="11" isBold="false"/>
-                    </textElement>
-                    <text><![CDATA[Dossier:]]></text>
-                </staticText>
                 <textField>
-                    <reportElement x="185" y="18" width="98" height="20" uuid="e007bab6-2fca-46a9-923f-2f08a7bfdd71"/>
+                    <reportElement x="200" y="18" width="90" height="20" uuid="e007bab6-2fca-46a9-923f-2f08a7bfdd71">
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    </reportElement>
                     <textElement textAlignment="Right">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="false"/>
                     </textElement>
                     <textFieldExpression>
-                        <![CDATA[$F{year_doss} != null ? $F{year_doss} + "/" + $F{ndo} : "NA"]]></textFieldExpression>
+                        <![CDATA[$P{dossierLabel} != null ? $P{dossierLabel} : "NA"]]></textFieldExpression>
                 </textField>
                 <textField>
-                    <reportElement x="189" y="37" width="94" height="20" uuid="f7665641-4fd3-4ec3-b507-78c5d948a0d8"/>
+                    <reportElement x="200" y="37" width="90" height="20" uuid="f7665641-4fd3-4ec3-b507-78c5d948a0d8">
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    </reportElement>
                     <textElement textAlignment="Right">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="false"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{facture_date_value}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{dateValue}]]></textFieldExpression>
                 </textField>
-                <staticText>
-                    <reportElement x="70" y="38" width="114" height="19" uuid="472dcaa0-81ad-470e-a6ce-af26c6599a50"/>
-                    <textElement textAlignment="Right">
-                        <font size="11" isBold="false"/>
-                    </textElement>
-                    <text><![CDATA[Date:]]></text>
-                </staticText>
                 <textField>
                     <reportElement x="7" y="88" width="221" height="20" uuid="79c9d9bb-26c7-4020-9ea6-3e450ebd4144"/>
                     <textElement textAlignment="Left">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="false"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{cl}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{clientFullName}]]></textFieldExpression>
                 </textField>
                 <textField>
                     <reportElement x="8" y="109" width="220" height="20" uuid="e134eed2-03af-44c5-91c2-4ccbc5c39e28"/>
                     <textElement textAlignment="Left">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="false"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{f_rue}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{street}]]></textFieldExpression>
                 </textField>
                 <textField>
                     <reportElement x="9" y="130" width="219" height="20" uuid="850ecccc-a42b-4c4b-b813-2db7d7966f51"/>
                     <textElement textAlignment="Left">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="false"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{ville}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{city}]]></textFieldExpression>
                 </textField>
                 <textField>
                     <reportElement x="10" y="151" width="218" height="20" uuid="02e6002e-3f03-425c-a778-262590a1f111"/>
                     <textElement textAlignment="Left">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="false"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{nom_fr_fr}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{countryLabel}]]></textFieldExpression>
                 </textField>
                 <textField>
                     <reportElement x="-171" y="188" width="331" height="42"
@@ -250,29 +142,51 @@ and f.id_facture_type=ft.id_facture_type
                     <textElement textAlignment="Center">
                         <font size="20" isBold="true"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[($F{description}).toUpperCase()]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[($P{typeLabel}).toUpperCase()]]></textFieldExpression>
                 </textField>
                 <textField>
                     <reportElement x="10" y="169" width="218" height="17" uuid="0bae87e3-659c-442b-b3f9-bf3720c6dfce"/>
                     <textElement textAlignment="Left">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="false"/>
                     </textElement>
-                    <textFieldExpression>
-                        <![CDATA[$F{f_tva} != null && $F{f_tva} != ""?"TVA"+$F{f_tva}:""]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{vat}!= null && $P{vat} != ""? $P{vat}:""]]></textFieldExpression>
                 </textField>
-                <staticText>
-                    <reportElement x="68" y="56" width="114" height="19" uuid="37fe5420-c5f2-42da-a0ef-02111e2781e7"/>
-                    <textElement textAlignment="Right">
-                        <font size="11" isBold="false"/>
-                    </textElement>
-                    <text><![CDATA[Échéance:]]></text>
-                </staticText>
                 <textField>
-                    <reportElement x="188" y="55" width="94" height="20" uuid="188c49c1-4416-49f0-a40d-3b8d96a68c33"/>
+                    <reportElement x="100" y="0" width="100" height="20" uuid="d6b63b40-a3f8-48f7-83be-81d7354ffcc8"/>
                     <textElement textAlignment="Right">
-                        <font size="11" isBold="false"/>
+                        <font size="10" isBold="true"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{facture_date_echeance}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$P{label_ref}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="102" y="18" width="98" height="20" uuid="278b2b9d-bde1-40bc-a1dc-4814769b31b0"/>
+                    <textElement textAlignment="Right">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{label_dossier}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="80" y="37" width="121" height="20" uuid="b93596b2-175b-48ef-8f6c-51f9a36bc8d1"/>
+                    <textElement textAlignment="Right">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{lbl_date}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="108" y="54" width="94" height="20" uuid="958b3fdf-edf8-4be9-af1e-fa1e72c70930"/>
+                    <textElement textAlignment="Right">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{label_echeance}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="200" y="54" width="90" height="20" uuid="70ec9f38-5226-4b43-b036-258ed019c7bf">
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Right">
+                        <font size="10" isBold="false"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{dateEcheance}]]></textFieldExpression>
                 </textField>
             </frame>
         </band>

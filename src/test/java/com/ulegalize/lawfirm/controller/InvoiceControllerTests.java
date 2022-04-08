@@ -6,7 +6,7 @@ import com.ulegalize.enumeration.EnumLanguage;
 import com.ulegalize.enumeration.EnumRefCurrency;
 import com.ulegalize.lawfirm.EntityTest;
 import com.ulegalize.lawfirm.model.LawfirmToken;
-import com.ulegalize.lawfirm.service.LawfirmService;
+import com.ulegalize.lawfirm.service.InvoiceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class InvoiceControllerTests extends EntityTest {
     @Autowired
-    LawfirmService lawfirmService;
+    InvoiceService invoiceService;
 
     @Autowired
     private MockMvc mvc;

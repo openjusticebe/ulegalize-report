@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
@@ -7,7 +7,7 @@
               leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
               uuid="7d93021c-f88f-4e80-9aac-5ec6e6016af0">
     <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
     <property name="com.jaspersoft.studio.unit." value="pixel"/>
     <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
     <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -345,6 +345,29 @@ sheet.date_action,
     <parameter name="lbl_collab" class="java.lang.String">
         <defaultValueExpression><![CDATA["Frais Collab."]]></defaultValueExpression>
     </parameter>
+    <parameter name="lbl_date" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="label_ref" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="lbl_desc" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="tax" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Taux"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="typeLabel" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="vat" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="countryLabel" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="reference" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="yearFacture" class="java.lang.Integer" isForPrompting="false"/>
+    <parameter name="numFacture" class="java.lang.Integer" isForPrompting="false"/>
+    <parameter name="dateValue" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="dateEcheance" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="dossierLabel" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="street" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="clientFullName" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="city" class="java.lang.String" isForPrompting="false"/>
+    <parameter name="lbl_page" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Page"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="fraisAdminList" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"
+               isForPrompting="false"/>
     <queryString language="SQL">
         <![CDATA[SELECT * FROM `t_virtualcab` WHERE `key`=$P{vcKey}]]>
     </queryString>
@@ -488,13 +511,13 @@ sheet.date_action,
         </band>
     </background>
     <title>
-        <band height="486" splitType="Stretch">
+        <band height="480" splitType="Stretch">
             <property name="com.jaspersoft.studio.layout"/>
             <property name="com.jaspersoft.studio.unit.height" value="px"/>
             <textField>
                 <reportElement x="-3" y="162" width="230" height="20" uuid="760fdd50-1805-434d-84c8-0969a0d046d2"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{website}]]></textFieldExpression>
             </textField>
@@ -505,49 +528,50 @@ sheet.date_action,
             <textField>
                 <reportElement x="-3" y="42" width="230" height="20" uuid="dc6c08b0-3282-49db-b1db-ba3dc4c33d3e"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+                <textFieldExpression>
+                    <![CDATA[$F{objetsocial} != null && $F{objetsocial} != "" ? $F{objetsocial} : $F{name}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="-3" y="62" width="230" height="20" uuid="b86bc061-363f-46b5-a00b-4be14d16f375"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{street}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="-3" y="82" width="60" height="20" uuid="7e0198e8-a2e5-4b88-b0c2-eddd1c8515bd"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{cp}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="57" y="82" width="170" height="20" uuid="3f70e031-9900-4189-94c9-0b4bb2c4e23e"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="-3" y="102" width="230" height="20" uuid="45d9aa0d-a0a1-499e-affd-6aa696e40fa0"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{telephone}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="-3" y="122" width="230" height="20" uuid="288605dd-5cbb-415a-b51d-ddba07594974"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="-3" y="143" width="230" height="20" uuid="38f5a573-7144-42b6-91e7-62259d1abf3f"/>
                 <textElement>
-                    <font size="11" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{numentreprise}]]></textFieldExpression>
             </textField>
@@ -561,6 +585,54 @@ sheet.date_action,
                 </subreportParameter>
                 <subreportParameter name="vcKey">
                     <subreportParameterExpression><![CDATA[$P{vcKey}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_ref">
+                    <subreportParameterExpression><![CDATA[$P{label_ref}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_dossier">
+                    <subreportParameterExpression><![CDATA[$P{label_dossier}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="lbl_date">
+                    <subreportParameterExpression><![CDATA[$P{lbl_date}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_echeance">
+                    <subreportParameterExpression><![CDATA[$P{label_echeance}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="typeLabel">
+                    <subreportParameterExpression><![CDATA[$P{typeLabel}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="vat">
+                    <subreportParameterExpression><![CDATA[$P{vat}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="countryLabel">
+                    <subreportParameterExpression><![CDATA[$P{countryLabel}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="reference">
+                    <subreportParameterExpression><![CDATA[$P{reference}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="yearFacture">
+                    <subreportParameterExpression><![CDATA[$P{yearFacture}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="numFacture">
+                    <subreportParameterExpression><![CDATA[$P{numFacture}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="dateValue">
+                    <subreportParameterExpression><![CDATA[$P{dateValue}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="dateEcheance">
+                    <subreportParameterExpression><![CDATA[$P{dateEcheance}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="dossierLabel">
+                    <subreportParameterExpression><![CDATA[$P{dossierLabel}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="street">
+                    <subreportParameterExpression><![CDATA[$P{street}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="clientFullName">
+                    <subreportParameterExpression><![CDATA[$P{clientFullName}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="city">
+                    <subreportParameterExpression><![CDATA[$P{city}]]></subreportParameterExpression>
                 </subreportParameter>
                 <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
                 <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "header.jasper"]]></subreportExpression>
@@ -600,6 +672,12 @@ sheet.date_action,
                 <subreportParameter name="label_invoice_done">
                     <subreportParameterExpression><![CDATA[$P{label_invoice_done}]]></subreportParameterExpression>
                 </subreportParameter>
+                <subreportParameter name="lbl_desc">
+                    <subreportParameterExpression><![CDATA[$P{lbl_desc}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="tax">
+                    <subreportParameterExpression><![CDATA[$P{tax}]]></subreportParameterExpression>
+                </subreportParameter>
                 <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
                 <subreportExpression><![CDATA[$P{SUBREPORT_DIR} +"resume.jasper"]]></subreportExpression>
             </subreport>
@@ -637,6 +715,21 @@ sheet.date_action,
                 <subreportParameter name="currency">
                     <subreportParameterExpression><![CDATA[$P{currency}]]></subreportParameterExpression>
                 </subreportParameter>
+                <subreportParameter name="label_htva">
+                    <subreportParameterExpression><![CDATA[$P{label_htva}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="label_tva">
+                    <subreportParameterExpression><![CDATA[$P{label_tva}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="lbl_desc">
+                    <subreportParameterExpression><![CDATA[$P{lbl_desc}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="tax">
+                    <subreportParameterExpression><![CDATA[$P{tax}]]></subreportParameterExpression>
+                </subreportParameter>
+                <subreportParameter name="fraisAdminList">
+                    <subreportParameterExpression><![CDATA[$P{fraisAdminList}]]></subreportParameterExpression>
+                </subreportParameter>
                 <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
                 <subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "annexes.jasper"]]></subreportExpression>
             </subreport>
@@ -664,7 +757,7 @@ sheet.date_action,
             <textField>
                 <reportElement x="180" y="116" width="150" height="30" uuid="ea6f889c-794c-404f-b2b9-2c343e65abc0"/>
                 <textElement textAlignment="Right"/>
-                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$P{lbl_page} + " " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
         </band>
     </pageFooter>

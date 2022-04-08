@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
@@ -15,24 +15,24 @@
     <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
     <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
     <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="dossierId" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
-	</parameter>
-	<parameter name="vcKey" class="java.lang.String">
-		<defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
-	</parameter>
-	<parameter name="userId" class="java.lang.String">
-		<defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
-	</parameter>
-	<parameter name="concerne" class="java.lang.String">
-		<defaultValueExpression><![CDATA[$P{concerne}]]></defaultValueExpression>
-	</parameter>
-	<parameter name="ourRef" class="java.lang.String">
-		<defaultValueExpression><![CDATA[$P{ourRef}]]></defaultValueExpression>
-	</parameter>
-	<queryString language="SQL">
-		<![CDATA[select
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <parameter name="dossierId" class="java.lang.Long">
+        <defaultValueExpression><![CDATA[$P{dossierId}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="vcKey" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{vcKey}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="userId" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{userId}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="concerne" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{concerne}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="ourRef" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{ourRef}]]></defaultValueExpression>
+    </parameter>
+    <queryString language="SQL">
+        <![CDATA[select
        t_countries.nom_fr_fr,
        (t_clients3_bis.f_nom_party) f_nom_party,
        IF(tusers.initiales='','??',tusers.initiales) as initiales,

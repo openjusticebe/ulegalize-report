@@ -1,9 +1,12 @@
 package com.ulegalize.lawfirm.controller;
 
+import com.ulegalize.enumeration.EnumLanguage;
 import com.ulegalize.enumeration.EnumVCOwner;
 import com.ulegalize.lawfirm.model.LawfirmToken;
-import com.ulegalize.lawfirm.service.LawfirmService;
+import com.ulegalize.lawfirm.model.enumeration.EnumTranslate;
+import com.ulegalize.lawfirm.service.InvoiceService;
 import com.ulegalize.lawfirm.utils.CalendarEventsUtil;
+import com.ulegalize.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -30,7 +33,7 @@ import java.util.*;
 @Slf4j
 public class PrestationController {
     @Autowired
-    LawfirmService lawfirmService;
+    InvoiceService invoiceService;
 
     @Autowired
     private DataSource dataSource;
@@ -39,6 +42,7 @@ public class PrestationController {
     public ResponseEntity<Resource> reportPrestationList(@RequestParam Boolean isShareVcKey,
                                                          @RequestParam(required = false) Integer responsableId,
                                                          @RequestParam(required = false) Integer clientId,
+                                                         @RequestParam(required = false) String language,
                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDate) {
         LawfirmToken lawfirmToken = (LawfirmToken) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -47,8 +51,7 @@ public class PrestationController {
 
         InputStream jasperfile = this.getClass().getClassLoader().getResourceAsStream(reportPath + "prestation_list.jasper");
 
-        boolean isShare = isShareVcKey != null ? isShareVcKey : false;
-        ByteArrayResource fileResponse = generatereportPrestationGlobal(isShare, startDate, endDate, reportPath, jasperfile, responsableId, clientId);
+        ByteArrayResource fileResponse = generatereportPrestationGlobal(language, startDate, endDate, reportPath, jasperfile, responsableId, clientId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=prestation_list.pdf");
@@ -65,6 +68,7 @@ public class PrestationController {
     @GetMapping(path = "/dossier/{dossierId}")
     public ResponseEntity<Resource> reportPrestationListByDossier(@PathVariable Integer dossierId,
                                                                   @RequestParam(required = false) Integer responsableId,
+                                                                  @RequestParam(required = false) String language,
                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDate) {
         LawfirmToken lawfirmToken = (LawfirmToken) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -73,7 +77,7 @@ public class PrestationController {
 
         InputStream jasperfile = this.getClass().getClassLoader().getResourceAsStream(reportPath + "prestation_list_dossier.jasper");
 
-        ByteArrayResource fileResponse = generatereportPrestationByDossier(startDate, endDate, reportPath, jasperfile, dossierId, responsableId);
+        ByteArrayResource fileResponse = generatereportPrestationByDossier(language, startDate, endDate, reportPath, jasperfile, dossierId, responsableId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=prestation_list_dossier.pdf");
@@ -87,15 +91,15 @@ public class PrestationController {
                 ;
     }
 
-    private ByteArrayResource generatereportPrestationGlobal(boolean isShareVcKey, ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer responsibleId, Integer clientId) {
-        return generatereportPrestation(isShareVcKey, startDate, endDate, reportPath, jasperfile, null, responsibleId, clientId);
+    private ByteArrayResource generatereportPrestationGlobal(String language, ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer responsibleId, Integer clientId) {
+        return generatereportPrestation(language, startDate, endDate, reportPath, jasperfile, null, responsibleId, clientId);
     }
 
-    private ByteArrayResource generatereportPrestationByDossier(ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer dossierId, Integer responsableId) {
-        return generatereportPrestation(false, startDate, endDate, reportPath, jasperfile, dossierId, responsableId, null);
+    private ByteArrayResource generatereportPrestationByDossier(String language, ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer dossierId, Integer responsableId) {
+        return generatereportPrestation(language, startDate, endDate, reportPath, jasperfile, dossierId, responsableId, null);
     }
 
-    private ByteArrayResource generatereportPrestation(boolean isShareVcKey, ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer dossierId, Integer responsibleId, Integer clientId) {
+    private ByteArrayResource generatereportPrestation(String language, ZonedDateTime startDate, ZonedDateTime endDate, String reportPath, InputStream jasperfile, Integer dossierId, Integer responsibleId, Integer clientId) {
         try {
             LawfirmToken lawfirmToken = (LawfirmToken) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             log.info("Entering generate reportPrestationList vckey {}", lawfirmToken.getVcKey());
@@ -107,6 +111,10 @@ public class PrestationController {
             // load the precompiled .jasper files
             JasperReport mainJasperReport = (JasperReport) JRLoader.loadObject(jasperfile);
 
+            EnumLanguage enumLanguage = EnumLanguage.FR;
+            if (language != null) {
+                enumLanguage = EnumLanguage.fromshortCode(language);
+            }
             JasperFillManager fillmgr = JasperFillManager.getInstance(ctx);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("currency", lawfirmToken.getSymbolCurrency());
@@ -114,16 +122,34 @@ public class PrestationController {
             parameters.put("userId", lawfirmToken.getUserId().intValue());
             parameters.put("startDate", CalendarEventsUtil.convertToDateViaInstant(startDate));
             parameters.put("endDate", CalendarEventsUtil.convertToDateViaInstant(endDate));
-            parameters.put("title", "Prestation");
-            parameters.put("periodLbl", "Période: ");
-            parameters.put("numberLbl", "Nombre: ");
-            parameters.put("costLbl", "Cout total: ");
-            parameters.put("timeLbl", "Temps total: ");
+            parameters.put("title", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_017.getLabelFr(),
+                    EnumTranslate.M_017.getLabelEn(),
+                    EnumTranslate.M_017.getLabelNl(),
+                    EnumTranslate.M_017.getLabelDe()));
+            parameters.put("periodLbl", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_027.getLabelFr(),
+                    EnumTranslate.M_027.getLabelEn(),
+                    EnumTranslate.M_027.getLabelNl(),
+                    EnumTranslate.M_027.getLabelDe()));
+            parameters.put("numberLbl", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_011.getLabelFr(),
+                    EnumTranslate.M_011.getLabelEn(),
+                    EnumTranslate.M_011.getLabelNl(),
+                    EnumTranslate.M_011.getLabelDe()));
+            parameters.put("costLbl", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_007.getLabelFr(),
+                    EnumTranslate.M_007.getLabelEn(),
+                    EnumTranslate.M_007.getLabelNl(),
+                    EnumTranslate.M_007.getLabelDe()));
+            parameters.put("timeLbl", Utils.getLabel(enumLanguage,
+                    EnumTranslate.M_008.getLabelFr(),
+                    EnumTranslate.M_008.getLabelEn(),
+                    EnumTranslate.M_008.getLabelNl(),
+                    EnumTranslate.M_008.getLabelDe()));
             List<Integer> vckeyShare = new ArrayList<>();
             vckeyShare.add(EnumVCOwner.OWNER_VC.getId());
-            if (isShareVcKey) {
-                vckeyShare.add(EnumVCOwner.NOT_OWNER_VC.getId());
-            }
+            vckeyShare.add(EnumVCOwner.NOT_OWNER_VC.getId());
             parameters.put("isShareDossier", vckeyShare);
             parameters.put("dossierId", dossierId);
             parameters.put("responsibleId", responsibleId);

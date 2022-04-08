@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
@@ -52,7 +52,10 @@ and fd.tva>0
         </field>
     </subDataset>
     <subDataset name="facture_detatils_dataset" uuid="4b71ccd7-a5d8-48d7-aac5-7208df0416e5">
-        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.sql.tables">
+            <![CDATA[dF9mYWN0dXJlX2RldGFpbHMgLDE1LDE1LDA3Yzg1YzMwLTc0ZjItNDJhZC1hZjJjLWU4ZDQyYjFk
+MjdhZDs=]]>
+        </property>
         <property name="com.jaspersoft.studio.data.defaultdataadapter" value="dev avogest"/>
         <parameter name="currency" class="java.lang.String">
             <parameterDescription><![CDATA[€]]></parameterDescription>
@@ -60,6 +63,18 @@ and fd.tva>0
         </parameter>
         <parameter name="id_facture" class="java.lang.Integer">
             <defaultValueExpression><![CDATA[$P{id_facture}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="lbl_desc" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{lbl_desc}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="label_htva" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{label_htva}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="tax" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{tax}]]></defaultValueExpression>
+        </parameter>
+        <parameter name="label_tva" class="java.lang.String">
+            <defaultValueExpression><![CDATA[$P{label_tva}]]></defaultValueExpression>
         </parameter>
         <queryString language="SQL">
             <![CDATA[SELECT *
@@ -125,6 +140,12 @@ WHERE
     </parameter>
     <parameter name="label_invoice_done" class="java.lang.String" isForPrompting="false">
         <defaultValueExpression><![CDATA[$P{label_invoice_done}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="lbl_desc" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[$P{lbl_desc}]]></defaultValueExpression>
+    </parameter>
+    <parameter name="tax" class="java.lang.String">
+        <defaultValueExpression><![CDATA[$P{tax}]]></defaultValueExpression>
     </parameter>
     <queryString language="SQL">
         <![CDATA[SELECT sum( fd.ttc) total_ttc, if(f.is_valid = 1, f.date_echeance, null) echeance
@@ -221,7 +242,7 @@ WHERE
                                                uuid="00c79bdb-ce51-4518-a6a3-b59556dcae94"/>
                                 <box topPadding="5" leftPadding="5"/>
                                 <textElement>
-                                    <font size="11"/>
+                                    <font size="10"/>
                                 </textElement>
                                 <textFieldExpression>
                                     <![CDATA[$P{label_tva} + " " +$F{tva} + " %"]]></textFieldExpression>
@@ -233,18 +254,9 @@ WHERE
                                 </reportElement>
                                 <box topPadding="5" leftPadding="0" bottomPadding="0" rightPadding="5"/>
                                 <textElement textAlignment="Right">
-                                    <font size="11" isBold="true"/>
+                                    <font size="10" isBold="true"/>
                                 </textElement>
-                                <textFieldExpression><![CDATA[" " + $P{currency}]]></textFieldExpression>
-                            </textField>
-                            <textField pattern="#,##0.00">
-                                <reportElement x="381" y="0" width="110" height="20"
-                                               uuid="3d534198-6642-4377-9113-82d222978d50"/>
-                                <box topPadding="5" leftPadding="0" bottomPadding="0" rightPadding="5"/>
-                                <textElement textAlignment="Right">
-                                    <font size="11" isBold="true"/>
-                                </textElement>
-                                <textFieldExpression><![CDATA[$F{groupTVA}]]></textFieldExpression>
+                                <textFieldExpression><![CDATA[$F{groupTVA} + " " + $P{currency}]]></textFieldExpression>
                             </textField>
                         </jr:listContents>
                     </jr:list>
@@ -261,27 +273,41 @@ WHERE
                     </reportElement>
                     <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
                               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                        <datasetRun subDataset="facture_detatils_dataset" uuid="fbe36323-7818-4cf1-8bfb-c44c5164549d">
+                        <datasetRun subDataset="facture_detatils_dataset" uuid="84a1229b-ebd4-4f70-89a6-38406834ea51">
                             <datasetParameter name="currency">
                                 <datasetParameterExpression><![CDATA[$P{currency}]]></datasetParameterExpression>
                             </datasetParameter>
                             <datasetParameter name="id_facture">
                                 <datasetParameterExpression><![CDATA[$P{id_facture}]]></datasetParameterExpression>
                             </datasetParameter>
+                            <datasetParameter name="label_htva">
+                                <datasetParameterExpression><![CDATA[$P{label_htva}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="lbl_desc">
+                                <datasetParameterExpression><![CDATA[$P{lbl_desc}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="tax">
+                                <datasetParameterExpression><![CDATA[$P{tax}]]></datasetParameterExpression>
+                            </datasetParameter>
+                            <datasetParameter name="label_tva">
+                                <datasetParameterExpression><![CDATA[$P{label_tva}]]></datasetParameterExpression>
+                            </datasetParameter>
                             <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
                         </datasetRun>
                         <jr:column width="238" uuid="6fa4757b-ac69-463c-b530-cd3c415ab22d">
                             <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
                             <jr:tableHeader style="Table 1_TH" height="30">
-                                <staticText>
+                                <textField>
                                     <reportElement x="0" y="0" width="238" height="30"
-                                                   uuid="69c41639-b42f-47c4-8a4b-6e098b315def"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
+                                                   uuid="eee90088-964c-46da-8bf5-7ef20ff3c5b4">
+                                        <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                                    </reportElement>
+                                    <textElement textAlignment="Left" verticalAlignment="Middle">
                                         <font isBold="true"/>
+                                        <paragraph leftIndent="5"/>
                                     </textElement>
-                                    <text><![CDATA[description]]></text>
-                                </staticText>
+                                    <textFieldExpression><![CDATA[$P{lbl_desc}]]></textFieldExpression>
+                                </textField>
                             </jr:tableHeader>
                             <jr:detailCell style="Table 1_TD" height="30">
                                 <textField>
@@ -295,15 +321,17 @@ WHERE
                         <jr:column width="120" uuid="c9a8d56f-c275-4e61-9d0e-4fd103006b49">
                             <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
                             <jr:tableHeader style="Table 1_TH" height="30">
-                                <staticText>
+                                <textField>
                                     <reportElement x="0" y="0" width="120" height="30"
-                                                   uuid="3ea456e6-65c1-414e-81c3-9066cd6b201a"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
+                                                   uuid="7197c2c7-4009-4631-84f4-18c2be519581">
+                                        <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                                    </reportElement>
+                                    <textElement verticalAlignment="Middle">
                                         <font isBold="true"/>
+                                        <paragraph leftIndent="5"/>
                                     </textElement>
-                                    <text><![CDATA[htva]]></text>
-                                </staticText>
+                                    <textFieldExpression><![CDATA[$P{label_htva}]]></textFieldExpression>
+                                </textField>
                             </jr:tableHeader>
                             <jr:detailCell style="Table 1_TD" height="30">
                                 <textField pattern="# ##0,00">
@@ -320,15 +348,17 @@ WHERE
                         <jr:column width="78" uuid="103cca75-ab55-4b0d-9454-a1d4fa57c084">
                             <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
                             <jr:tableHeader style="Table 1_TH" height="30">
-                                <staticText>
+                                <textField>
                                     <reportElement x="0" y="0" width="78" height="30"
-                                                   uuid="f8cc2265-ac58-48b3-b61d-83c8166fd1d5"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
+                                                   uuid="44cb3269-64e6-4453-9748-bafad147fce7">
+                                        <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                                    </reportElement>
+                                    <textElement verticalAlignment="Middle">
                                         <font isBold="true"/>
+                                        <paragraph leftIndent="5"/>
                                     </textElement>
-                                    <text><![CDATA[tva]]></text>
-                                </staticText>
+                                    <textFieldExpression><![CDATA[$P{tax}]]></textFieldExpression>
+                                </textField>
                             </jr:tableHeader>
                             <jr:detailCell style="Table 1_TD" height="30">
                                 <textField>
@@ -343,15 +373,17 @@ WHERE
                             <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
                             <jr:tableHeader style="Table 1_TH" height="30">
                                 <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                                <staticText>
+                                <textField>
                                     <reportElement x="0" y="0" width="74" height="30"
-                                                   uuid="14bc9ec5-ab04-4702-bf4a-f05d7e9b77d5"/>
-                                    <box topPadding="5" leftPadding="5"/>
-                                    <textElement>
+                                                   uuid="630ce3a7-401d-445d-8529-60519cf5a2f2">
+                                        <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                                    </reportElement>
+                                    <textElement verticalAlignment="Middle">
                                         <font isBold="true"/>
+                                        <paragraph leftIndent="5"/>
                                     </textElement>
-                                    <text><![CDATA[ttc]]></text>
-                                </staticText>
+                                    <textFieldExpression><![CDATA[$P{label_tva}]]></textFieldExpression>
+                                </textField>
                             </jr:tableHeader>
                             <jr:detailCell style="Table 1_TD" height="30">
                                 <textField>
